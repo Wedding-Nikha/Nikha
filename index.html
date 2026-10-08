@@ -12,7 +12,7 @@
 <link rel="preload" as="image" href="https://static.tildacdn.net/tild3238-6635-4563-b336-356564353735/Group_305.png">
 <link rel="preload" as="image" href="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png">
 <link rel="preload" as="image" href="assets/hero-title.webp" type="image/webp">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Noto+Naskh+Arabic:wght@400;500&family=Rufina:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Noto+Naskh+Arabic:wght@400;500&family=Rufina:wght@400&family=Source+Sans+3:wght@400&display=swap" rel="stylesheet">
 <style>
 /* =========================================
    TOKENS
@@ -326,6 +326,60 @@ a{color:inherit;text-decoration:inherit}
 /* RSVP */
 .rsvp-btn{border:0;background:var(--gold);color:#fff;padding:14px 28px;border-radius:999px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;box-shadow:0 8px 24px rgba(142,105,53,.2)}
 .rsvp-msg{display:none;margin-top:18px;font-family:"Cormorant Garamond",serif;font-size:19px;color:#85653c;font-style:italic}
+
+/* RSVP dialog */
+body.modal-open{overflow:hidden}
+.rsvp-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;
+  padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom));
+  visibility:hidden;pointer-events:none;transition:visibility 0s linear .45s}
+.rsvp-modal.is-open{visibility:visible;pointer-events:auto;transition-delay:0s}
+.rsvp-backdrop{position:absolute;inset:0;background:rgba(62,57,51,.72);opacity:0;transition:opacity .4s ease}
+.rsvp-modal.is-open .rsvp-backdrop{opacity:1}
+.rsvp-panel{position:relative;width:min(100%,560px);max-height:100%;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  background:#fff;color:#1d1d1d;padding:clamp(30px,8vw,40px) clamp(22px,7vw,45px) clamp(28px,7vw,48px);text-align:left;
+  box-shadow:0 30px 80px rgba(30,24,16,.28);
+  opacity:0;transform:translate3d(0,28px,0) scale(.97);transition:opacity .4s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
+.rsvp-modal.is-open .rsvp-panel{opacity:1;transform:none}
+.rsvp-close{position:absolute;top:8px;right:8px;width:40px;height:40px;display:grid;place-items:center;color:#9a9a9a;border-radius:50%;transition:color .2s,background-color .2s}
+.rsvp-close:hover{color:#444;background:#f4f4f4}
+.rsvp-close svg{width:18px;height:18px}
+.rsvp-title{font-family:"Rufina",serif;font-size:clamp(20px,5.8vw,23px);line-height:1.25;text-align:center;color:#1d1d1d}
+.rsvp-sub{margin-top:12px;font-family:"Rufina",serif;font-size:clamp(16px,4.4vw,18px);text-align:center;color:#1d1d1d}
+.rsvp-field{margin-top:clamp(28px,7vw,36px)}
+.rsvp-label{display:block;font-family:"Rufina",serif;font-size:clamp(20px,5.6vw,23px);line-height:1.2;color:#1d1d1d;margin:0 0 12px}
+.rsvp-input{display:block;width:100%;height:clamp(52px,14vw,60px);padding:0 16px;border:1px solid #cfcfcf;border-radius:6px;background:#fff;
+  font-family:"Source Sans 3",Montserrat,sans-serif;font-size:17px;color:#1d1d1d;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
+.rsvp-input:focus{border-color:#c9ad6e;box-shadow:0 0 0 3px rgba(201,173,110,.22)}
+.rsvp-input:disabled{background:#f6f6f6;color:#999}
+.rsvp-input::-webkit-outer-spin-button,.rsvp-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.rsvp-input[type=number]{-moz-appearance:textfield}
+fieldset.rsvp-field{border:0;padding:0;margin-left:0;margin-right:0;min-width:0}
+fieldset.rsvp-field legend{padding:0}
+.rsvp-choice{display:flex;align-items:center;gap:11px;padding:4px 0;font-family:"Source Sans 3",Montserrat,sans-serif;font-size:16.5px;color:#1d1d1d;cursor:pointer;width:fit-content}
+.rsvp-choice + .rsvp-choice{margin-top:2px}
+.rsvp-choice input{flex:none;width:20px;height:20px;margin:0;border:2px solid #6e6e6e;border-radius:1px;background:#fff;display:grid;place-items:center;cursor:pointer;-webkit-appearance:none;appearance:none;transition:background-color .2s,border-color .2s}
+.rsvp-choice input::after{content:"";width:5px;height:10px;margin-top:-2px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);transition:transform .2s cubic-bezier(.2,.8,.2,1.4)}
+.rsvp-choice input:checked{background:#c9ad6e;border-color:#c9ad6e}
+.rsvp-choice input:checked::after{transform:rotate(45deg) scale(1)}
+.rsvp-choice input:focus-visible{outline:2px solid #c9ad6e;outline-offset:2px}
+.rsvp-error{min-height:0;margin-top:8px;font-family:"Source Sans 3",Montserrat,sans-serif;font-size:14px;color:#a33c2b}
+.rsvp-error:empty{display:none}
+.rsvp-submit{display:block;width:100%;height:clamp(52px,14vw,60px);margin-top:clamp(26px,7vw,34px);border-radius:30px;background:#c9ad6e;color:#fff;
+  font-family:"Rufina",serif;font-size:clamp(17px,4.6vw,18px);letter-spacing:.01em;transition:background-color .2s,transform .15s,opacity .2s}
+.rsvp-submit:hover{background:#bf9f5c}
+.rsvp-submit:active{transform:scale(.99)}
+.rsvp-submit:disabled{opacity:.7;cursor:progress}
+.rsvp-done{text-align:center;padding:12px 0 4px}
+.rsvp-done .rsvp-title{margin-top:18px}
+.rsvp-done .rsvp-sub{color:#555}
+.rsvp-tick{width:64px;height:64px;margin:0 auto;border-radius:50%;border:1px solid #c9ad6e;display:grid;place-items:center;color:#c9ad6e}
+.rsvp-tick svg{width:28px;height:28px;stroke-dasharray:30;stroke-dashoffset:30;transition:stroke-dashoffset .6s ease .25s}
+.rsvp-done.is-shown .rsvp-tick svg{stroke-dashoffset:0}
+.rsvp-done .rsvp-submit{margin-top:28px}
+@media (prefers-reduced-motion:reduce){
+  .rsvp-panel,.rsvp-backdrop{transition:opacity .2s ease}
+  .rsvp-panel{transform:none}
+}
 
 /* Calendar */
 .calendar{max-width:330px;margin:0 auto;border:1px solid var(--line);border-radius:20px;background:rgba(255,250,243,.55);padding:clamp(14px,4.5vw,20px) clamp(10px,4vw,18px)}
@@ -726,6 +780,52 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
 </main>
 </div>
 
+<!-- RSVP dialog -->
+<div class="rsvp-modal" id="rsvp-modal" aria-hidden="true">
+  <div class="rsvp-backdrop" data-rsvp-close></div>
+  <div class="rsvp-panel" role="dialog" aria-modal="true" aria-labelledby="rsvp-title">
+    <button class="rsvp-close" type="button" aria-label="Close" data-rsvp-close>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+
+    <form id="rsvp-form" novalidate>
+      <h2 class="rsvp-title" id="rsvp-title">Confirm your attendance</h2>
+      <p class="rsvp-sub">Please RSVP by October 25th</p>
+
+      <div class="rsvp-field">
+        <label class="rsvp-label" for="rsvp-name">Your Full Name</label>
+        <input class="rsvp-input" id="rsvp-name" name="name" type="text" autocomplete="name" maxlength="120" required>
+        <div class="rsvp-error" id="rsvp-name-error"></div>
+      </div>
+
+      <fieldset class="rsvp-field">
+        <legend class="rsvp-label">Will you come?</legend>
+        <label class="rsvp-choice"><input type="radio" name="attending" value="yes" required> Yes, I will</label>
+        <label class="rsvp-choice"><input type="radio" name="attending" value="no"> Unfortunately, I cant</label>
+        <div class="rsvp-error" id="rsvp-attending-error"></div>
+      </fieldset>
+
+      <div class="rsvp-field">
+        <label class="rsvp-label" for="rsvp-guests">Number of guests attending</label>
+        <input class="rsvp-input" id="rsvp-guests" name="guests" type="number" inputmode="numeric" min="1" max="20" step="1">
+        <div class="rsvp-error" id="rsvp-guests-error"></div>
+      </div>
+
+      <div class="rsvp-error" id="rsvp-form-error" role="alert"></div>
+      <button class="rsvp-submit" id="rsvp-submit" type="submit">Submit</button>
+    </form>
+
+    <div class="rsvp-done" id="rsvp-done" hidden>
+      <div class="rsvp-tick" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+      </div>
+      <h2 class="rsvp-title" id="rsvp-done-title">Thank you!</h2>
+      <p class="rsvp-sub" id="rsvp-done-text">We can't wait to celebrate with you.</p>
+      <button class="rsvp-submit" type="button" data-rsvp-close>Close</button>
+    </div>
+  </div>
+</div>
+
 
 <script>
 /* Always start at the envelope, even after a reload */
@@ -869,11 +969,130 @@ function updateCountdown(){
 }
 updateCountdown(); countdownTimer=setInterval(updateCountdown,1000);
 
-/* RSVP */
-document.getElementById('rsvp-btn').addEventListener('click',function(){
-  document.getElementById('rsvp-msg').style.display='block';
-  this.style.display='none';
-});
+/* =========================================
+   RSVP → Google Sheets
+   Paste your Apps Script web-app URL below (see RSVP-SETUP.md).
+   ========================================= */
+const RSVP_ENDPOINT='https://script.google.com/macros/s/AKfycbyhfX9hmNQdR3ZBiI96_hlsf33MB9Wi1FoIHYkHECI99MNpIT_M_aIhvTr4aozzlfyb/exec';
+
+(function(){
+  const modal=document.getElementById('rsvp-modal');
+  const openBtn=document.getElementById('rsvp-btn');
+  const form=document.getElementById('rsvp-form');
+  const done=document.getElementById('rsvp-done');
+  const nameInput=document.getElementById('rsvp-name');
+  const guestsInput=document.getElementById('rsvp-guests');
+  const submitBtn=document.getElementById('rsvp-submit');
+  const cardMsg=document.getElementById('rsvp-msg');
+  const err={
+    name:document.getElementById('rsvp-name-error'),
+    attending:document.getElementById('rsvp-attending-error'),
+    guests:document.getElementById('rsvp-guests-error'),
+    form:document.getElementById('rsvp-form-error')
+  };
+  function openModal(){
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    setTimeout(()=>{ (form.hidden ? done.querySelector('button') : nameInput).focus({preventScroll:true}); },320);
+  }
+  function closeModal(){
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('modal-open');
+    // return focus to the RSVP button; once they have replied it is hidden, so just let go of focus
+    if(openBtn.style.display==='none') document.activeElement.blur();
+    else openBtn.focus({preventScroll:true});
+  }
+
+  openBtn.addEventListener('click',openModal);
+  modal.querySelectorAll('[data-rsvp-close]').forEach(el=>el.addEventListener('click',closeModal));
+  document.addEventListener('keydown',e=>{
+    if(!modal.classList.contains('is-open')) return;
+    if(e.key==='Escape') closeModal();
+    if(e.key==='Tab'){ // keep focus inside the dialog
+      const items=[...modal.querySelectorAll('button,input')].filter(el=>!el.disabled && el.offsetParent!==null);
+      const first=items[0], last=items[items.length-1];
+      if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
+    }
+  });
+
+  // "Unfortunately, I cant" → no guest count needed
+  form.querySelectorAll('input[name=attending]').forEach(r=>r.addEventListener('change',()=>{
+    const coming=form.attending.value==='yes';
+    guestsInput.disabled=!coming;
+    if(!coming) guestsInput.value='';
+    err.attending.textContent='';
+    if(!coming) err.guests.textContent='';
+  }));
+  nameInput.addEventListener('input',()=>{err.name.textContent='';});
+  guestsInput.addEventListener('input',()=>{err.guests.textContent='';});
+
+  function validate(){
+    let ok=true;
+    const name=nameInput.value.trim();
+    const attending=form.attending.value;
+    const guests=Number(guestsInput.value);
+    Object.values(err).forEach(el=>el.textContent='');
+    if(name.length<2){err.name.textContent='Please enter your full name.';ok=false;}
+    if(!attending){err.attending.textContent='Please choose one option.';ok=false;}
+    if(attending==='yes' && !(Number.isInteger(guests) && guests>=1 && guests<=20)){
+      err.guests.textContent='Please enter a number between 1 and 20.';ok=false;
+    }
+    if(!ok){ const first=form.querySelector('.rsvp-error:not(:empty)'); if(first) first.parentElement.scrollIntoView({block:'center',behavior:'smooth'}); }
+    return ok ? {name, attending, guests: attending==='yes' ? guests : 0} : null;
+  }
+
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const data=validate();
+    if(!data) return;
+    if(!RSVP_ENDPOINT){
+      err.form.textContent='RSVP is not connected to Google Sheets yet. Add the web-app URL in index.html (see RSVP-SETUP.md).';
+      return;
+    }
+    if(navigator.onLine===false){
+      err.form.textContent='You seem to be offline. Please check your connection and try again.';
+      return;
+    }
+    submitBtn.disabled=true;
+    submitBtn.textContent='Sending…';
+    // A simple form POST avoids CORS preflight; Apps Script appends the row.
+    // keepalive lets the request finish even if the guest closes the page.
+    const request=fetch(RSVP_ENDPOINT,{method:'POST',mode:'no-cors',keepalive:true,body:new URLSearchParams({
+      name:data.name, attending:data.attending, guests:String(data.guests)
+    })});
+    // Google can take several seconds to wake the script, so don't keep the guest
+    // waiting: thank them once the request is sent (or quickly fails).
+    const outcome=await Promise.race([
+      request.then(()=>'sent',()=>'failed'),
+      new Promise(r=>setTimeout(()=>r('in-flight'),3500))
+    ]);
+    submitBtn.disabled=false;
+    submitBtn.textContent='Submit';
+    if(outcome==='failed'){
+      err.form.textContent='Could not send right now. Please check your connection and try again.';
+      return;
+    }
+    showDone(data);
+  });
+
+  function showDone(data){
+    const coming=data.attending==='yes';
+    document.getElementById('rsvp-done-title').textContent='Thank you!';
+    document.getElementById('rsvp-done-text').textContent=coming
+      ? "We can't wait to celebrate with you."
+      : "Thank you for letting us know. You will be missed.";
+    form.hidden=true;
+    done.hidden=false;
+    requestAnimationFrame(()=>done.classList.add('is-shown'));
+    done.querySelector('button').focus({preventScroll:true});
+    cardMsg.textContent=coming ? "Thank you! We can't wait to celebrate with you." : 'Thank you for letting us know.';
+    cardMsg.style.display='block';
+    openBtn.style.display='none';
+  }
+})();
 </script>
 
 
