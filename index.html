@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://static.tildacdn.net" crossorigin>
+<link rel="preload" as="image" href="assets/marble.webp" type="image/webp">
+<link rel="preload" as="image" href="https://static.tildacdn.net/tild3238-6635-4563-b336-356564353735/Group_305.png">
+<link rel="preload" as="image" href="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png">
 <link rel="preload" as="image" href="assets/hero-title.webp" type="image/webp">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Noto+Naskh+Arabic:wght@400;500&family=Rufina:wght@400&display=swap" rel="stylesheet">
 <style>
@@ -61,18 +64,157 @@ a{color:inherit;text-decoration:inherit}
 .eyebrow{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:#9b753b}
 .gold{color:var(--gold)}
 .section{padding:clamp(60px,15vw,78px) var(--gutter)}
-.card{background:rgba(255,250,243,.92);border:1px solid var(--line);border-radius:clamp(20px,5.5vw,24px);box-shadow:0 18px 50px rgba(72,50,28,.10);padding:var(--card-pad)}
+.card{position:relative;background:rgba(255,250,243,.92);border:1px solid var(--line);border-radius:clamp(20px,5.5vw,24px);padding:var(--card-pad);
+  /* inner gold hairline, then the soft drop shadow */
+  box-shadow:inset 0 0 0 7px rgba(255,250,243,.92),inset 0 0 0 8px rgba(177,138,75,.2),0 18px 50px rgba(72,50,28,.10)}
+.card>*{position:relative;z-index:1}
+
+/* Minimal floral corners — the same marble blooms as the first page, on opposite corners */
+.card.deco-a::before,.card.deco-a::after,
+.card.deco-b::before,.card.deco-b::after{
+  content:"";position:absolute;z-index:0;width:clamp(74px,21vw,96px);aspect-ratio:758 / 957;pointer-events:none;
+  background:url("https://static.tildacdn.net/tild3238-6635-4563-b336-356564353735/Group_305.png") center / contain no-repeat;
+  opacity:0;transform:var(--ft) scale(.82);
+  transition:opacity 1.1s ease .45s,transform 1.5s cubic-bezier(.2,.7,.2,1) .45s}
+.card.deco-a::before{left:-17px;top:-19px;--ft:scaleY(-1)}       /* top-left */
+.card.deco-a::after{right:-17px;bottom:-19px;--ft:scaleX(-1)}     /* bottom-right */
+.card.deco-b::before{right:-17px;top:-19px;--ft:rotate(180deg)}   /* top-right */
+.card.deco-b::after{left:-17px;bottom:-19px;--ft:scale(1)}        /* bottom-left */
+.card.active::before,.card.active::after{opacity:.96;transform:var(--ft)}
 .divider{height:1px;width:120px;margin:18px auto;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
 .reveal.active{opacity:1;transform:none}
 
 /* =========================================
-   OPENING
+   OPENING — ivory marble, gold frame, blooming florals
+   Everything animates with transform/opacity only (GPU friendly).
    ========================================= */
-#intro-overlay{position:fixed;inset:0;z-index:100;background:#f6ede1;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity 1s ease}
-#intro-overlay .intro-inner{width:var(--shell-w);height:var(--vh);position:relative;display:flex;align-items:center;justify-content:center;background:#f6ede1}
-#envelope-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none;background:#f6ede1}
-#open-btn{position:relative;z-index:2;border:1px solid rgba(177,138,75,.65);background:rgba(255,250,243,.85);color:#8f6a35;padding:13px 28px;border-radius:999px;font-family:"Cormorant Garamond",serif;font-size:clamp(18px,5.4vw,21px);letter-spacing:.18em;box-shadow:0 8px 28px rgba(67,49,30,.12)}
+#intro-overlay{position:fixed;inset:0;z-index:100;background:#ece1d2;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity 1s ease}
+#intro-overlay .intro-inner{
+  /* flower size follows the smaller of width / height so short phones stay uncluttered */
+  --fw:min(calc(var(--shell-w) * .6),calc(var(--vh) * .31));
+  --aw:min(calc(var(--shell-w) * .74),292px,calc(var(--vh) * .4));
+  --mono:calc(var(--aw) * .46);
+  width:var(--shell-w);height:var(--vh);position:relative;overflow:hidden;
+  background:#f6efe5 url("assets/marble.webp") center/cover no-repeat;box-shadow:0 0 80px rgba(67,49,30,.16)}
+#envelope-vid{position:absolute;inset:0;z-index:4;width:100%;height:100%;object-fit:contain;background:#f6ede1;opacity:0;pointer-events:none;transition:opacity .8s ease}
+.intro-inner.is-opening #envelope-vid{opacity:1}
+
+.intro-stage{position:absolute;inset:0;transition:opacity .9s ease,transform 1.2s ease}
+.intro-inner.is-opening .intro-stage{opacity:0;transform:scale(1.04)}
+/* soft light in the middle, warm shade at the edges */
+.intro-stage::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 62% 40% at 50% 50%,rgba(255,252,246,.92) 0%,rgba(255,252,246,.55) 45%,rgba(255,252,246,0) 75%),
+             radial-gradient(ellipse 120% 90% at 50% 50%,rgba(150,115,70,0) 58%,rgba(150,115,70,.13) 100%)}
+
+/* double gold hairline frame */
+.intro-frame{position:absolute;z-index:1;top:max(16px,env(safe-area-inset-top));bottom:max(16px,env(safe-area-inset-bottom));left:16px;right:16px;
+  border:1px solid rgba(177,138,75,.55);opacity:0;animation:introFade 1.4s ease .2s forwards}
+.intro-frame::before{content:"";position:absolute;inset:5px;border:1px solid rgba(177,138,75,.28)}
+.intro-frame::after{content:"";position:absolute;left:50%;top:-5px;width:9px;height:9px;margin-left:-4.5px;transform:rotate(45deg);background:#f8f1e6;border:1px solid rgba(177,138,75,.7)}
+
+/* florals: wrapper = placement/flip, span = bloom-in, img = breeze sway */
+.intro-flower{position:absolute;z-index:2;width:var(--fw);aspect-ratio:758 / 957;pointer-events:none}
+.intro-flower span{display:block;width:100%;height:100%;transform-origin:10% 90%;opacity:0;animation:introBloom 1.9s cubic-bezier(.2,.7,.2,1) var(--d,0s) forwards}
+.intro-flower img{width:100%;height:100%;object-fit:contain;transform-origin:10% 90%;animation:introSway var(--sw,8s) ease-in-out calc(var(--d,0s) + 1.9s) infinite;will-change:transform}
+.if-tl{left:calc(var(--fw) * -.16);top:calc(var(--fw) * -.14);transform:scaleY(-1);--d:.15s;--sw:9s}
+.if-tr{right:calc(var(--fw) * -.16);top:calc(var(--fw) * -.14);transform:rotate(180deg);--d:.3s;--sw:8.2s}
+.if-bl{left:calc(var(--fw) * -.14);bottom:calc(var(--fw) * -.12);--d:.05s;--sw:8.6s}
+.if-br{right:calc(var(--fw) * -.14);bottom:calc(var(--fw) * -.12);transform:scaleX(-1);--d:.2s;--sw:9.4s}
+/* second, smaller layer for a fuller garland */
+.if-bl2,.if-br2{width:calc(var(--fw) * .62);z-index:1}
+.if-bl2{left:calc(var(--fw) * .34);bottom:calc(var(--fw) * -.2);transform:rotate(-14deg);--d:.55s;--sw:10s}
+.if-br2{right:calc(var(--fw) * .34);bottom:calc(var(--fw) * -.2);transform:scaleX(-1) rotate(-14deg);--d:.65s;--sw:10.6s}
+.if-tl2,.if-tr2{width:calc(var(--fw) * .5);z-index:1}
+.if-tl2{left:calc(var(--fw) * .3);top:calc(var(--fw) * -.2);transform:scaleY(-1) rotate(-12deg);--d:.75s;--sw:11s}
+.if-tr2{right:calc(var(--fw) * .3);top:calc(var(--fw) * -.2);transform:rotate(180deg) rotate(-12deg);--d:.85s;--sw:11.4s}
+/* warm glow pooled under the bottom bouquets */
+.intro-glow{position:absolute;z-index:1;left:50%;bottom:calc(var(--fw) * -.35);width:150%;height:calc(var(--fw) * 1.3);transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,250,232,.85),rgba(255,246,222,.35) 55%,rgba(255,246,222,0))}
+
+@keyframes introBloom{
+  0%{opacity:0;transform:scale(.72) rotate(-6deg)}
+  60%{opacity:1}
+  100%{opacity:1;transform:none}
+}
+@keyframes introSway{
+  0%,100%{transform:rotate(0deg) scale(1)}
+  50%{transform:rotate(1.8deg) scale(1.015)}
+}
+@keyframes introFade{to{opacity:1}}
+@keyframes introRise{from{opacity:0;transform:translate3d(0,12px,0)}to{opacity:1;transform:none}}
+
+/* drifting petals */
+.intro-petals{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.intro-petals i{position:absolute;top:-24px;left:var(--x);width:var(--s,11px);height:calc(var(--s,11px) * 1.35);border-radius:80% 0 80% 0;opacity:0;
+  background:linear-gradient(135deg,#fffdf8 0%,#f3e6d2 55%,#e2c99f 100%);box-shadow:inset 0 0 0 .5px rgba(177,138,75,.45);
+  animation:petalFall var(--t,12s) linear var(--d,0s) infinite;will-change:transform,opacity}
+.intro-petals i:nth-child(1){--x:12%;--t:13s;--d:1.2s;--dx:60px}
+.intro-petals i:nth-child(2){--x:28%;--t:11s;--d:3.4s;--dx:-40px;--s:9px}
+.intro-petals i:nth-child(3){--x:46%;--t:14s;--d:.4s;--dx:70px;--s:12px}
+.intro-petals i:nth-child(4){--x:63%;--t:12s;--d:5.2s;--dx:-55px;--s:8px}
+.intro-petals i:nth-child(5){--x:78%;--t:15s;--d:2.2s;--dx:-80px}
+.intro-petals i:nth-child(6){--x:88%;--t:12.5s;--d:6.8s;--dx:-30px;--s:10px}
+.intro-petals i:nth-child(7){--x:36%;--t:16s;--d:8.4s;--dx:45px;--s:9px}
+.intro-petals i:nth-child(8){--x:56%;--t:13.5s;--d:10s;--dx:-65px;--s:11px}
+@keyframes petalFall{
+  0%{opacity:0;transform:translate3d(0,0,0) rotate(0deg)}
+  10%{opacity:.95}
+  85%{opacity:.85}
+  100%{opacity:0;transform:translate3d(var(--dx,40px),calc(var(--vh) + 40px),0) rotate(520deg)}
+}
+
+/* centre composition */
+.intro-center{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 28px}
+.intro-eyebrow{font-size:clamp(9px,2.6vw,10px);font-weight:500;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:#9b753b;opacity:0;animation:introRise 1.1s ease 1.45s forwards}
+.monogram{position:relative;flex:none;width:var(--mono);height:var(--mono);margin:0 0 clamp(14px,2.2vh,20px);display:grid;place-items:center;opacity:0;animation:introRise 1.3s ease 1.2s forwards}
+.monogram svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.monogram .ring-dots{animation:ringSpin 60s linear infinite;transform-origin:50% 50%}
+.monogram-letters{position:relative;left:-.1em;font-family:"Great Vibes",cursive;font-size:calc(var(--mono) * .34);line-height:1;padding:.2em .3em .14em;
+  background:linear-gradient(160deg,#e3c385 0%,#b8862f 38%,#8c5c19 62%,#c99a4d 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.monogram-letters small{font-family:"Cormorant Garamond",serif;font-size:.42em;font-style:italic;margin:0 .06em;vertical-align:.35em}
+@keyframes ringSpin{to{transform:rotate(360deg)}}
+/* gold arch framing the monogram (2:3 artboard, monogram sits in the dome) */
+.intro-arch{position:relative;width:var(--aw);aspect-ratio:2 / 3}
+.arch-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.arch-panel{fill:rgba(255,252,246,.6);opacity:0;animation:introFade 1.6s ease .7s forwards}
+.arch-line{fill:none;stroke:rgba(177,138,75,.78);stroke-width:.8;stroke-dasharray:1;stroke-dashoffset:1;animation:archDraw 2.6s cubic-bezier(.45,0,.2,1) .35s forwards}
+.arch-inner{stroke:rgba(177,138,75,.4);stroke-width:.5;animation-delay:.65s}
+.arch-base{animation-duration:1s;animation-delay:2.3s}
+.arch-finial{fill:#b8893f;opacity:0;animation:introFade 1s ease 2.5s forwards}
+@keyframes archDraw{to{stroke-dashoffset:0}}
+.arch-content{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;padding-top:calc(var(--aw) * .395)}
+
+/* climbing side vines */
+.if-ml,.if-mr{width:calc(var(--fw) * .52);z-index:1;top:calc(var(--vh) * .35)}
+.if-ml{left:calc(var(--fw) * -.1);transform:scaleX(-1) rotate(-8deg);--d:.95s;--sw:10.2s}
+.if-mr{right:calc(var(--fw) * -.1);transform:rotate(-8deg);--d:1.05s;--sw:9.8s}
+
+/* twinkling sparkles */
+.intro-sparks{position:absolute;inset:0;z-index:3;pointer-events:none}
+.intro-sparks svg{position:absolute;left:var(--x);top:var(--y);width:var(--sz,10px);height:var(--sz,10px);fill:#c99a4d;opacity:0;animation:twinkle var(--t,3.8s) ease-in-out var(--d,0s) infinite;will-change:transform,opacity}
+.intro-sparks svg:nth-child(1){--x:20%;--y:29%;--d:1.6s}
+.intro-sparks svg:nth-child(2){--x:78%;--y:26%;--d:2.6s;--sz:8px;--t:4.4s}
+.intro-sparks svg:nth-child(3){--x:9%;--y:46%;--d:3.3s;--sz:7px}
+.intro-sparks svg:nth-child(4){--x:89%;--y:49%;--d:2s;--t:4.2s}
+.intro-sparks svg:nth-child(5){--x:18%;--y:66%;--d:3.9s;--sz:8px}
+.intro-sparks svg:nth-child(6){--x:80%;--y:70%;--d:1.9s;--sz:11px;--t:4.6s}
+.intro-sparks svg:nth-child(7){--x:34%;--y:19%;--d:4.4s;--sz:7px}
+.intro-sparks svg:nth-child(8){--x:64%;--y:83%;--d:2.9s;--sz:7px;--t:4s}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.3) rotate(0deg)}50%{opacity:.9;transform:scale(1) rotate(45deg)}}
+.intro-rule{display:flex;align-items:center;gap:10px;margin:clamp(10px,1.6vh,14px) 0 clamp(16px,2.6vh,24px);opacity:0;animation:introRise 1.1s ease 1.6s forwards}
+.intro-rule::before,.intro-rule::after{content:"";width:44px;height:1px;background:linear-gradient(90deg,transparent,rgba(177,138,75,.8))}
+.intro-rule::after{transform:scaleX(-1)}
+.intro-rule i{width:6px;height:6px;transform:rotate(45deg);border:1px solid rgba(177,138,75,.85)}
+
+.open-wrap{position:relative;opacity:0;animation:introRise 1.1s ease 1.8s forwards}
+.open-wrap::before{content:"";position:absolute;inset:0;border-radius:999px;border:1px solid rgba(177,138,75,.6);animation:btnPulse 2.6s ease-out 2.8s infinite;pointer-events:none}
+#open-btn{position:relative;overflow:hidden;border:1px solid rgba(177,138,75,.75);background:linear-gradient(180deg,rgba(255,252,246,.96),rgba(248,239,226,.96));color:#8a6531;
+  padding:14px clamp(20px,6.4vw,34px);border-radius:999px;font-family:"Cormorant Garamond",serif;font-size:clamp(16px,4.6vw,20px);letter-spacing:.2em;padding-left:calc(clamp(20px,6.4vw,34px) + .2em);
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.7),inset 0 0 0 4px rgba(177,138,75,.22),0 10px 30px rgba(110,78,36,.16)}
+#open-btn::after{content:"";position:absolute;top:0;bottom:0;left:0;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:translateX(-160%) skewX(-18deg);animation:btnShine 4.5s ease-in-out 2.4s infinite}
+@keyframes btnPulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.22,1.5);opacity:0}}
+@keyframes btnShine{0%,60%{transform:translateX(-160%) skewX(-18deg)}100%{transform:translateX(330%) skewX(-18deg)}}
 
 /* =========================================
    HERO — positions are artboard pixels (×--u)
@@ -237,10 +379,18 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
   html{scroll-behavior:auto}
   .hero-title,.hero-flower,.scroll-cue span{animation:none}
   .reveal{opacity:1;transform:none;transition:none}
+  .card::before,.card::after{transition:none}
+  .card.deco-a::before,.card.deco-a::after,.card.deco-b::before,.card.deco-b::after{opacity:.96;transform:var(--ft)}
+  .intro-flower span,.intro-frame,.intro-eyebrow,.monogram,.intro-rule,.open-wrap,.arch-panel,.arch-finial{animation:none;opacity:1;transform:none}
+  .arch-line{animation:none;stroke-dashoffset:0}
+  .intro-sparks{display:none}
+  .intro-flower img,.monogram .ring-dots,.open-wrap::before,#open-btn::after{animation:none}
+  .intro-petals{display:none}
 }
 /* Set by script on low-memory / low-core phones */
-.lite .hero-flower,.lite .hero-title{animation:none;will-change:auto}
-.lite .card{box-shadow:0 10px 28px rgba(72,50,28,.08)}
+.lite .hero-flower,.lite .hero-title,.lite .intro-flower img,.lite .monogram .ring-dots{animation:none;will-change:auto}
+.lite .intro-petals i:nth-child(n+5),.lite .intro-sparks svg:nth-child(n+5){display:none}
+.lite .card{box-shadow:inset 0 0 0 7px rgba(255,250,243,.92),inset 0 0 0 8px rgba(177,138,75,.2),0 10px 28px rgba(72,50,28,.08)}
 </style>
 </head>
 <body class="no-scroll">
@@ -248,7 +398,69 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
 <!-- Opening envelope experience -->
 <div id="intro-overlay">
   <div class="intro-inner">
-    <button id="open-btn" type="button" aria-label="Open wedding invitation">Tap to open</button>
+    <div class="intro-stage">
+      <div class="intro-glow" aria-hidden="true"></div>
+      <div class="intro-frame" aria-hidden="true"></div>
+
+      <div class="intro-flower if-tl2" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png" alt="" draggable="false"></span></div>
+      <div class="intro-flower if-tr2" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png" alt="" draggable="false"></span></div>
+      <div class="intro-flower if-bl2" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png" alt="" draggable="false"></span></div>
+      <div class="intro-flower if-br2" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png" alt="" draggable="false"></span></div>
+      <div class="intro-flower if-tl" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3238-6635-4563-b336-356564353735/Group_305.png" alt="" draggable="false"></span></div>
+      <div class="intro-flower if-tr" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3238-6635-4563-b336-356564353735/Group_305.png" alt="" draggable="false"></span></div>
+      <div class="intro-flower if-bl" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3238-6635-4563-b336-356564353735/Group_305.png" alt="" draggable="false"></span></div>
+      <div class="intro-flower if-br" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3238-6635-4563-b336-356564353735/Group_305.png" alt="" draggable="false"></span></div>
+
+      <!-- climbing vines along the side edges -->
+      <div class="intro-flower if-ml" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png" alt="" draggable="false"></span></div>
+      <div class="intro-flower if-mr" aria-hidden="true"><span><img src="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png" alt="" draggable="false"></span></div>
+
+      <div class="intro-petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+      <!-- twinkling gold sparkles in the open spaces -->
+      <div class="intro-sparks" aria-hidden="true">
+        <svg viewBox="0 0 10 10"><path d="M5 0 5.7 4.3 10 5 5.7 5.7 5 10 4.3 5.7 0 5 4.3 4.3Z"/></svg>
+        <svg viewBox="0 0 10 10"><path d="M5 0 5.7 4.3 10 5 5.7 5.7 5 10 4.3 5.7 0 5 4.3 4.3Z"/></svg>
+        <svg viewBox="0 0 10 10"><path d="M5 0 5.7 4.3 10 5 5.7 5.7 5 10 4.3 5.7 0 5 4.3 4.3Z"/></svg>
+        <svg viewBox="0 0 10 10"><path d="M5 0 5.7 4.3 10 5 5.7 5.7 5 10 4.3 5.7 0 5 4.3 4.3Z"/></svg>
+        <svg viewBox="0 0 10 10"><path d="M5 0 5.7 4.3 10 5 5.7 5.7 5 10 4.3 5.7 0 5 4.3 4.3Z"/></svg>
+        <svg viewBox="0 0 10 10"><path d="M5 0 5.7 4.3 10 5 5.7 5.7 5 10 4.3 5.7 0 5 4.3 4.3Z"/></svg>
+        <svg viewBox="0 0 10 10"><path d="M5 0 5.7 4.3 10 5 5.7 5.7 5 10 4.3 5.7 0 5 4.3 4.3Z"/></svg>
+        <svg viewBox="0 0 10 10"><path d="M5 0 5.7 4.3 10 5 5.7 5.7 5 10 4.3 5.7 0 5 4.3 4.3Z"/></svg>
+      </div>
+
+      <div class="intro-center">
+        <div class="intro-arch">
+          <!-- gold Islamic arch, drawn in line by line -->
+          <svg class="arch-svg" viewBox="0 0 200 300" aria-hidden="true">
+            <path class="arch-panel" d="M14 300V128C14 72 70 58 100 14 130 58 186 72 186 128V300Z"/>
+            <path class="arch-line" pathLength="1" d="M14 300V128C14 72 70 58 100 14 130 58 186 72 186 128V300"/>
+            <path class="arch-line arch-inner" pathLength="1" d="M22 300V131C22 80 74 66 100 27 126 66 178 80 178 131V300"/>
+            <path class="arch-line arch-base" pathLength="1" d="M2 300H30M170 300H198"/>
+            <g class="arch-finial">
+              <path d="M100 0 103.2 6 100 12 96.8 6Z"/>
+              <circle cx="14" cy="128" r="2.2"/><circle cx="186" cy="128" r="2.2"/>
+              <circle cx="14" cy="300" r="2"/><circle cx="186" cy="300" r="2"/>
+            </g>
+          </svg>
+          <div class="arch-content">
+            <div class="monogram" aria-hidden="true">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="49" fill="rgba(255,252,246,.55)" stroke="rgba(177,138,75,.75)" stroke-width=".6"/>
+                <circle cx="50" cy="50" r="44.5" fill="none" stroke="rgba(177,138,75,.4)" stroke-width=".4"/>
+                <circle class="ring-dots" cx="50" cy="50" r="46.8" fill="none" stroke="rgba(177,138,75,.8)" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="0 4.9"/>
+              </svg>
+              <div class="monogram-letters">K<small>&amp;</small>S</div>
+            </div>
+                        <div class="intro-eyebrow">Nikah Invitation</div>
+            <div class="intro-rule" aria-hidden="true"><i></i></div>
+            <div class="open-wrap">
+              <button id="open-btn" type="button" aria-label="Open wedding invitation">Tap to open</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <video id="envelope-vid" playsinline muted preload="auto">
       <source src="katie_saif_invelop_no_watermark.mp4" type="video/mp4">
     </video>
@@ -340,7 +552,7 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
 
   <!-- Invitation -->
   <section class="section">
-    <div class="card reveal text-center">
+    <div class="card deco-a reveal text-center">
       <div class="eyebrow">With Love &amp; Blessings</div>
       <div class="divider"></div>
       <p class="invite-text">
@@ -359,7 +571,7 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
 
   <!-- Prayer -->
   <section class="section pt-2">
-    <div class="card reveal text-center">
+    <div class="card deco-b reveal text-center">
       <div class="eyebrow">A Prayer for Our Journey</div>
       <div class="divider"></div>
       <p class="prayer">
@@ -375,7 +587,7 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
 
   <!-- Date / time + calendar -->
   <section class="section pt-2">
-    <div class="card reveal text-center">
+    <div class="card deco-a reveal text-center">
       <div class="eyebrow">Save the Date</div>
       <div class="divider"></div>
       <div class="calendar mt-6">
@@ -400,7 +612,7 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
 
   <!-- Countdown -->
   <section class="section pt-2">
-    <div class="card reveal text-center">
+    <div class="card deco-b reveal text-center">
       <div class="eyebrow">Counting the moments</div>
       <div class="divider"></div>
       <div id="countdown" class="countdown mt-7">
@@ -414,7 +626,7 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
 
   <!-- Venue -->
   <section class="section pt-2">
-    <div class="card reveal text-center">
+    <div class="card deco-a reveal text-center">
       <div class="eyebrow">When &amp; Where</div>
       <div class="divider"></div>
 
@@ -451,7 +663,7 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
 
   <!-- Timeline -->
   <section class="section pt-2">
-    <div class="card reveal">
+    <div class="card deco-a reveal">
       <div class="text-center">
         <div class="eyebrow">The Evening</div>
         <h2 class="font-display text-4xl c-deep mt-2">Wedding Timeline</h2>
@@ -495,7 +707,7 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
 
   <!-- RSVP only; dress code and gifts intentionally removed -->
   <section class="section pt-2 pb-20">
-    <div class="card reveal text-center">
+    <div class="card deco-b reveal text-center">
       <div class="eyebrow">We'd love to have you with us</div>
       <h2 class="font-display text-4xl c-deep mt-2">Confirm Your Attendance</h2>
       <div class="divider"></div>
@@ -560,14 +772,41 @@ function finishIntro(){
     musicBtn.style.display='flex';
     envelopeVid.removeAttribute('src');
     envelopeVid.load(); // release the envelope decoder
+    scheduleScrollHint();
   },1000);
   mainVideo.currentTime=0;
   syncHeroVideo();
 }
 
+/* After the envelope, glide the page down a little so guests see there is more below.
+   Skipped if they have already started scrolling or touching the page. */
+function scheduleScrollHint(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let interacted=false;
+  const stop=()=>{interacted=true;};
+  ['wheel','touchstart','pointerdown','keydown'].forEach(type=>window.addEventListener(type,stop,{passive:true,once:true}));
+
+  setTimeout(()=>{
+    if(interacted || window.scrollY>8) return;
+    const distance=Math.round(Math.min(140,Math.max(80,window.innerHeight*.14)));
+    const from=window.scrollY, duration=1300, root=document.documentElement;
+    const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    let start=0;
+    root.style.scrollBehavior='auto';
+    function step(now){
+      if(!start) start=now;
+      const t=Math.min(1,(now-start)/duration);
+      if(interacted){root.style.scrollBehavior='';return;}
+      window.scrollTo(0,from+distance*ease(t));
+      if(t<1) requestAnimationFrame(step); else root.style.scrollBehavior='';
+    }
+    requestAnimationFrame(step);
+  },2500);
+}
+
 openBtn.addEventListener('click',()=>{
-  openBtn.style.display='none';
-  envelopeVid.style.display='block';
+  openBtn.disabled=true;
+  introOverlay.querySelector('.intro-inner').classList.add('is-opening');
   envelopeVid.currentTime=0;
   envelopeVid.play().catch(finishIntro);
   mainVideo.preload='auto'; // start buffering the hero while the envelope plays
