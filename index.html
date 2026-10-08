@@ -1,516 +1,171 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f6ede1">
 <title>Karishma & Saif — Nikah Invitation</title>
-<script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Noto+Naskh+Arabic:wght@400;500&family=Rufina:wght@400&display=swap" rel="stylesheet">
-<!--<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Noto+Naskh+Arabic:wght@400;500&display=swap" rel="stylesheet">-->
+<link rel="preconnect" href="https://static.tildacdn.net" crossorigin>
+<link rel="preload" as="image" href="assets/hero-title.webp" type="image/webp">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Noto+Naskh+Arabic:wght@400;500&family=Rufina:wght@400&display=swap" rel="stylesheet">
 <style>
+/* =========================================
+   TOKENS
+   The whole hero is drawn on a 440px-wide artboard.
+   --u is "one artboard pixel" at the current screen size,
+   so every hero element scales together on any phone.
+   ========================================= */
 :root{
   --cream:#f8f0e6; --cream-deep:#eee1cf; --gold:#b18a4b; --gold-light:#d7b777;
   --ink:#493b2d; --muted:#756653; --line:rgba(177,138,75,.34);
   --shell:440px;
+  --shell-w:min(100vw,var(--shell));
+  --u:calc(var(--shell-w) / 440);
+  --gutter:clamp(14px,5vw,24px);
+  --card-pad:clamp(20px,6.4vw,28px);
+  --vh:100vh;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:Montserrat,sans-serif;overflow-x:hidden}
-body.no-scroll{overflow:hidden;height:100vh}
-.page-shell{position:relative;width:min(100%,var(--shell));margin-left:auto;margin-right:auto;background:transparent;min-height:100vh;overflow:hidden;box-shadow:0 0 60px rgba(67,49,30,.10)}
+@supports (height:100dvh){:root{--vh:100dvh}}
+@media (min-width:768px){
+  :root{--shell:480px;--card-pad:40px}
+}
+
+/* =========================================
+   BASE (small reset — replaces the Tailwind runtime)
+   ========================================= */
+*,*::before,*::after{box-sizing:border-box}
+html{line-height:1.5;-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Montserrat,sans-serif;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+body.no-scroll{overflow:hidden;height:var(--vh)}
+h1,h2,h3,p{margin:0;font-size:inherit;font-weight:inherit}
+img,video,canvas,svg{display:block;max-width:100%}
+button{font:inherit;color:inherit;margin:0;padding:0;border:0;background:none;cursor:pointer}
+a{color:inherit;text-decoration:inherit}
+
+.page-shell{position:relative;width:var(--shell-w);margin:0 auto;background:var(--cream);min-height:var(--vh);overflow:hidden;box-shadow:0 0 60px rgba(67,49,30,.10)}
+@supports (overflow:clip){.page-shell{overflow:clip}}
 .content{position:relative;z-index:3}
-/* Portrait hero video: keep the template's narrow 440x780 visual ratio and NEVER crop/zoom. */
-.hero-media{position:absolute;inset:0;width:100%;height:100%;display:flex;justify-content:center;align-items:stretch;z-index:0;pointer-events:none;overflow:hidden;background:var(--cream-deep)}
-.hero-media video{width:100%;height:100%;max-width:440px;display:block;object-fit:contain;object-position:center center}
-.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,249,239,.03) 0%,rgba(62,42,23,.05) 48%,rgba(255,249,239,.12) 100%)}
-.content>.hero{isolation:isolate}
-.hero>.hero-copy,.hero>.scroll-cue{position:relative;z-index:2}
+
+/* Tablet & desktop: the invitation sits as a card on a soft backdrop,
+   and the bottom flowers may spill gently past its edges. */
+@media (min-width:560px){
+  body{background:#ece1d2}
+  .page-shell{overflow:visible;box-shadow:0 0 80px rgba(67,49,30,.16)}
+}
+
 .font-display{font-family:"Cormorant Garamond",serif}
 .font-script{font-family:"Great Vibes",cursive}
 .arabic{font-family:"Noto Naskh Arabic",serif}
 .eyebrow{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:#9b753b}
 .gold{color:var(--gold)}
-.section{padding:78px 24px}
-.card{background:rgba(255,250,243,.90);border:1px solid var(--line);border-radius:24px;box-shadow:0 18px 50px rgba(72,50,28,.10);backdrop-filter:blur(10px)}
+.section{padding:clamp(60px,15vw,78px) var(--gutter)}
+.card{background:rgba(255,250,243,.92);border:1px solid var(--line);border-radius:clamp(20px,5.5vw,24px);box-shadow:0 18px 50px rgba(72,50,28,.10);padding:var(--card-pad)}
 .divider{height:1px;width:120px;margin:18px auto;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
 .reveal.active{opacity:1;transform:none}
-/* Opening */
+
+/* =========================================
+   OPENING
+   ========================================= */
 #intro-overlay{position:fixed;inset:0;z-index:100;background:#f6ede1;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity 1s ease}
-#intro-overlay .intro-inner{width:min(100vw,var(--shell));height:100vh;position:relative;display:flex;align-items:center;justify-content:center;background:#f6ede1}
+#intro-overlay .intro-inner{width:var(--shell-w);height:var(--vh);position:relative;display:flex;align-items:center;justify-content:center;background:#f6ede1}
 #envelope-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none;background:#f6ede1}
-#open-btn{position:relative;z-index:2;border:1px solid rgba(177,138,75,.65);background:rgba(255,250,243,.75);color:#8f6a35;padding:13px 28px;border-radius:999px;font-family:"Cormorant Garamond",serif;font-size:21px;letter-spacing:.18em;box-shadow:0 8px 28px rgba(67,49,30,.12);cursor:pointer;backdrop-filter:blur(8px)}
-/* Hero */
-.hero{height:min(780px,calc(100vw * 780 / 440));display:flex;align-items:center;justify-content:center;text-align:center;padding:44px 28px;position:relative;background:transparent}
-.hero-copy{
-    width:100%;
-    max-width:390px;
-    margin:auto;
-
-    /* MANUAL POSITION */
-    transform: translateX(32px) translateY(-50px);
-
-    /* TEXT VISIBILITY */
-    text-shadow:
-        0 2px 6px rgba(255,255,255,.9),
-        0 0 14px rgba(255,255,255,.65);
-}
-.hero .eyebrow{font-size:11px;letter-spacing:.28em;margin-bottom:12px}
-.hero .welcome{font-family:"Cormorant Garamond",serif;font-size:26px;line-height:1.05;color:#735d42}
-.hero .of{font-family:"Cormorant Garamond",serif;font-size:17px;color:#8d6e42;margin:8px 0}
-.hero .names{font-family:"Great Vibes",cursive;font-size:67px;line-height:.9;color:#806039;letter-spacing:.01em}
-.hero .amp{font-family:"Cormorant Garamond",serif;font-size:31px;color:#a37a3e;line-height:1;margin:2px 0}
-
-
+#open-btn{position:relative;z-index:2;border:1px solid rgba(177,138,75,.65);background:rgba(255,250,243,.85);color:#8f6a35;padding:13px 28px;border-radius:999px;font-family:"Cormorant Garamond",serif;font-size:clamp(18px,5.4vw,21px);letter-spacing:.18em;box-shadow:0 8px 28px rgba(67,49,30,.12)}
 
 /* =========================================
-   SOFT VIDEO-TO-CREAM BLEND
-   Does not affect page layout
+   HERO — positions are artboard pixels (×--u)
    ========================================= */
+.hero{position:relative;z-index:5;height:calc(780 * var(--u))}
+.hero-media{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:var(--cream-deep)}
+.hero-media video{width:100%;height:100%;object-fit:contain;object-position:center}
+.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,249,239,.03) 0%,rgba(62,42,23,.05) 48%,rgba(255,249,239,.12) 100%)}
+.video-bottom-fade{position:absolute;left:0;right:0;bottom:0;height:calc(180 * var(--u));z-index:4;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(248,240,230,0) 0%,rgba(248,240,230,.08) 15%,rgba(248,240,230,.25) 35%,rgba(248,240,230,.55) 60%,rgba(248,240,230,.85) 82%,rgba(248,240,230,1) 100%)}
 
-.hero-media {
-    position: absolute;
+.hero-title{position:absolute;z-index:3;left:calc(45 * var(--u));top:calc(154 * var(--u));width:calc(341 * var(--u));margin:0;
+  animation:heroTextFloat 5s ease-in-out infinite;will-change:transform}
+.hero-title img{width:100%;height:auto;filter:drop-shadow(0 3px 6px rgba(90,55,25,.22))}
+@keyframes heroTextFloat{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-4px,0)}}
+
+/* Bottom florals (original Tilda coordinates on the 440 artboard) */
+.hero-flower{position:absolute;z-index:2;top:calc(534 * var(--u));width:calc(224 * var(--u));height:calc(283 * var(--u));pointer-events:none;will-change:transform}
+.hero-flower img{position:relative;width:100%;height:100%;object-fit:contain}
+.hero-flower-left{left:calc(-45 * var(--u));animation:flowerFloatLeft 6.5s ease-in-out infinite}
+.hero-flower-right{left:calc(259 * var(--u));animation:flowerFloatRight 6.5s ease-in-out infinite}
+/* Soft glow behind each bouquet — a wide gradient instead of a live blur filter */
+.hero-flower::before{content:"";position:absolute;left:50%;top:55%;width:calc(380 * var(--u));height:calc(380 * var(--u));transform:translate(-50%,-50%);pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,255,245,.92) 0%,rgba(255,247,225,.68) 29%,rgba(255,242,215,.34) 57%,rgba(255,242,215,.10) 80%,rgba(255,255,255,0) 100%)}
+@keyframes flowerFloatLeft{
+  0%,50%,100%{transform:translate3d(0,0,0) scale(1) rotate(0deg)}
+  25%{transform:translate3d(-1px,-2px,0) scale(1.02) rotate(-2deg)}
+  75%{transform:translate3d(1px,2px,0) scale(1.02) rotate(2deg)}
+}
+@keyframes flowerFloatRight{
+  0%,50%,100%{transform:translate3d(0,0,0) scale(1) rotate(0deg)}
+  25%{transform:translate3d(1px,0,0) scale(1.02) rotate(2deg)}
+  75%{transform:translate3d(-3px,-2px,0) scale(1.02) rotate(-2deg)}
 }
 
-.video-bottom-fade {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+.scroll-cue{position:absolute;z-index:3;left:50%;top:calc(703 * var(--u));transform:translateX(-50%);text-align:center;color:#8d6e42;font-family:"Cormorant Garamond",serif;font-size:max(13px,calc(17 * var(--u)));line-height:1.45;font-style:italic;text-shadow:0 1px 9px rgba(255,255,255,.65)}
+.scroll-cue span{display:block;font-size:1.4em;line-height:16px;margin-top:6px;font-style:normal;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translate3d(0,0,0);opacity:.65}50%{transform:translate3d(0,5px,0);opacity:1}}
 
-    height: 180px;
+/* Pause decorative loops while the hero is off screen */
+.hero.is-offscreen .hero-title,
+.hero.is-offscreen .hero-flower,
+.hero.is-offscreen .scroll-cue span{animation-play-state:paused}
 
-    background: linear-gradient(
-        to bottom,
-        rgba(248, 240, 230, 0) 0%,
-        rgba(248, 240, 230, 0.08) 15%,
-        rgba(248, 240, 230, 0.25) 35%,
-        rgba(248, 240, 230, 0.55) 60%,
-        rgba(248, 240, 230, 0.85) 82%,
-        rgba(248, 240, 230, 1) 100%
-    );
-
-    z-index: 4;
-    pointer-events: none;
-}
-
-
-
+/* Music control is anchored to the invitation canvas, not the browser viewport. */
+.music-btn{position:absolute;right:16px;bottom:16px;width:48px;height:48px;border-radius:50%;border:1px solid rgba(177,138,75,.65);background:rgba(248,240,230,.96);color:#8f6a35;display:none;align-items:center;justify-content:center;z-index:40;box-shadow:0 8px 24px rgba(72,50,28,.18);transition:transform .2s ease,box-shadow .2s ease}
+.music-btn svg{width:22px;height:22px}
+@media (hover:hover){.music-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(72,50,28,.2)}}
 
 /* =========================================
-   TILDA-STYLE BOTTOM FLORAL DECORATIONS
-   Based on the original template coordinates
-   ========================================= */
-
-.hero {
-    position: relative;
-    overflow: visible;
-}
-
-/* Both decorative flowers */
-.hero-flower {
-    position: absolute;
-    width: 224px;
-    height: 283px;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.hero-flower img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: contain;
-}
-
-/* Original Tilda positioning translated
-   relative to the 440px hero/video */
-.hero-flower-left {
-    left: -105px;
-    bottom: -350px;
-
-    animation: flowerFloatLeft 6.5s ease-in-out infinite;
-}
-
-.hero-flower-right {
-    right: -105px;
-    bottom: -350px;
-
-    animation: flowerFloatRight 6.5s ease-in-out infinite;
-}
-
-/* Original-style subtle movement */
-@keyframes flowerFloatLeft {
-    0%,
-    100% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-
-    25% {
-        transform: translate(-1px, -2px) scale(1.02) rotate(-2deg);
-    }
-
-    50% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-
-    75% {
-        transform: translate(1px, 2px) scale(1.02) rotate(2deg);
-    }
-}
-
-@keyframes flowerFloatRight {
-    0%,
-    100% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-
-    25% {
-        transform: translate(1px, 0) scale(1.02) rotate(2deg);
-    }
-
-    50% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-
-    75% {
-        transform: translate(-3px, -2px) scale(1.02) rotate(-2deg);
-    }
-}
-
-/* Keep text above flowers */
-.hero-copy {
-    position: relative;
-    z-index: 5;
-}
-
-
-/* mobile adjustment  edited by saifu */
-@media (max-width: 600px) {
-    .hero-flower {
-        width: 224px;
-        height: 283px;
-        bottom: -350px;
-    }
-
-    .hero-flower-left {
-        left: -105px;
-    }
-
-    .hero-flower-right {
-        right: -105px;
-    }
-}
-
-
-/* =========================================
-   ALLOW BOTTOM FLOWERS TO EXTEND OUTSIDE HERO
-   ========================================= */
-
-.page-shell,
-.content,
-main,
-.hero,
-.hero-copy {
-    overflow: visible !important;
-}
-
-/* Keep hero above the next section */
-.hero {
-    position: relative;
-    z-index: 5;
-}
-
-/* Flowers */
-.hero-flower {
-    position: absolute;
-    z-index: 20;
-    pointer-events: none;
-}
-
-/* Keep text above flowers */
-.hero-copy {
-    position: relative;
-    z-index: 30;
-}
-
-/* Make the next section sit behind the flowers */
-.hero + section {
-    position: relative;
-    z-index: 1;
-}
-
-
-.hero-flower::before {
-    content: "";
-    position: absolute;
-
-    width: 300px;
-    height: 300px;
-
-    left: 50%;
-    top: 55%;
-
-    transform: translate(-50%, -50%);
-
-    background: radial-gradient(
-        circle,
-        rgba(255, 255, 245, 0.95) 0%,
-        rgba(255, 247, 225, 0.70) 25%,
-        rgba(255, 242, 215, 0.35) 48%,
-        rgba(255, 255, 255, 0) 75%
-    );
-
-    filter: blur(22px);
-    z-index: -1;
-    pointer-events: none;
-}
-
-
-.hero-text-image {
-    width: 341px;
-    max-width: 116%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-    position: relative;
-    left: -15px;
-    top: -59px;
-	filter: drop-shadow(0 3px 6px rgba(90, 55, 25, 0.22));
-    animation: heroTextFloat 5s ease-in-out infinite;
-}
-
-@keyframes heroTextFloat {
-    0%, 100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-4px);
-    }
-}
-
-
-
-/* ================================
    SCRATCH DATE CARD
-   ================================ */
+   ========================================= */
+.scratch-date-section{position:relative;z-index:1;padding:calc(140 * var(--u)) var(--gutter) 0;text-align:center}
+.scratch-date-title{margin:0 0 clamp(8px,3vw,14px);font-family:"Great Vibes",cursive;font-size:max(32px,calc(37 * var(--u)));line-height:1.2;font-weight:400;color:#806b43}
+.scratch-date-subtitle{margin:0 0 clamp(16px,5vw,22px);font-family:"Rufina",serif;font-size:max(15px,calc(19 * var(--u)));color:#a68547;letter-spacing:.05em}
 
-.scratch-date-section {
-    width: 100%;
-    padding: 140px 20px 0px;
-    text-align: center;
-    background: #f8f0e6;
-}
+.tdr-panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,3.6vw,16px);width:min(94%,372px);margin:0 auto;padding-bottom:20px}
+.tdr-panel{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.tdr-tile{position:relative;width:100%;aspect-ratio:1 / 1.15;border-radius:14px;overflow:hidden;border:1px solid rgba(190,128,39,.42);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.72),0 8px 24px rgba(135,83,23,.13),0 2px 6px rgba(109,68,19,.08);
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+@supports not (aspect-ratio:1 / 1){.tdr-tile{height:0;padding-top:115%}}
+.tdr-tile-bg{position:absolute;inset:0;
+  background:radial-gradient(circle at 48% 32%,rgba(255,255,255,.96) 0%,rgba(255,250,241,.86) 34%,transparent 67%),linear-gradient(145deg,#fffdf8 0%,#faf1e5 48%,#eedcc3 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.78),inset 0 -20px 32px rgba(184,119,35,.055)}
+.tdr-num-cvs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.tdr-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer;transition:opacity .6s ease}
+.tdr-canvas.is-cleared{opacity:0;pointer-events:none}
+/* padding-left balances the trailing letter-spacing so labels sit truly centred */
+.tdr-label{font-family:"Rufina",serif;font-size:11px;letter-spacing:.36em;padding-left:.36em;color:#a96f1b;text-transform:uppercase;text-align:center}
 
-.scratch-date-title {
-    margin: 0 0 14px;
-    font-family: "Great Vibes", cursive;
-    font-size: 35px;
-    font-weight: 400;
-    color: #806b43;
-}
+#tdr-confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none}
+.tdr-flash{position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0;
+  background:radial-gradient(ellipse 65% 45% at 50% 50%,rgba(201,139,56,.16) 0%,rgba(255,239,208,.08) 38%,transparent 72%)}
+.tdr-flash.tdr-go{animation:tdrFlash 1.5s ease forwards}
+@keyframes tdrFlash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
 
-.scratch-date-subtitle {
-    margin: 0 0 28px;
-    font-family: "Rufina", serif;
-    font-size: 20px;
-    color: #a68547;
-    letter-spacing: 1px;
-}
-
-.tdr-root,
-.tdr-root *,
-.tdr-root *::before,
-.tdr-root *::after {
-    box-sizing: border-box;
-}
-
-.tdr-root {
-    display: block;
-    background: transparent;
-    font-family: "Rufina", serif;
-	
-	position: relative;
-    top: -20px;   /* up/down */
-    left: 0px;    /* left/right */
-}
-
-.tdr-scene {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.tdr-inner {
-    width: min(460px, 96vw);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.tdr-panels {
-    display: flex;
-    gap: 8px;
-    width: 85%;
-    padding-bottom: 20px;
-}
-
-.tdr-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 11px;
-}
-
-.tdr-tile {
-    position: relative;
-    width: 90%;
-    aspect-ratio: 1 / 1.15;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid rgba(190, 128, 39, 0.42);
-    box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.72),
-        0 8px 24px rgba(135, 83, 23, 0.13),
-        0 2px 6px rgba(109, 68, 19, 0.08);
-    cursor: pointer;
-}
-
-.tdr-tile-bg {
-    position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    background:
-        radial-gradient(
-            circle at 48% 32%,
-            rgba(255, 255, 255, 0.96) 0%,
-            rgba(255, 250, 241, 0.86) 34%,
-            transparent 67%
-        ),
-        linear-gradient(
-            145deg,
-            #fffdf8 0%,
-            #faf1e5 48%,
-            #eedcc3 100%
-        );
-    box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.78),
-        inset 0 -20px 32px rgba(184, 119, 35, 0.055);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.tdr-num-cvs {
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: none;
-}
-
-.tdr-canvas {
-    position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    display: block;
-    touch-action: none;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-}
-
-.tdr-label {
-    font-family: "Rufina", serif;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: #a96f1b;
-    text-shadow: 0 1px 0 rgba(255, 246, 225, 0.5);
-    text-transform: uppercase;
-    text-align: center;
-}
-
-#tdr-confetti {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-    background: transparent;
-}
-
-.tdr-flash {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9998;
-    opacity: 0;
-    background: transparent;
-}
-
-.tdr-flash.tdr-go {
-    animation: tdrFlash 1.5s ease forwards;
-}
-
-@keyframes tdrFlash {
-    0% {
-        opacity: 0;
-        background: radial-gradient(
-            ellipse 65% 45% at 50% 50%,
-            rgba(201, 139, 56, 0.16) 0%,
-            rgba(255, 239, 208, 0.08) 38%,
-            transparent 72%
-        );
-    }
-
-    25% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    .scratch-date-section {
-        padding: 40px 14px 60px;
-    }
-
-    .scratch-date-title {
-        font-size: 38px;
-    }
-
-    .scratch-date-subtitle {
-        font-size: 17px;
-    }
-
-    .tdr-panels {
-        gap: 6px;
-    }
-}
-
-/* scratch animation ends here*/
-
-.scroll-cue{position:absolute;bottom:-350px;left:50%;transform:translateX(-538%);color:#8d6e42;font-family:"Cormorant Garamond",serif;font-size:17px;font-style:italic;text-shadow:0 1px 9px rgba(255,255,255,.65)}
-.scroll-cue span{display:block;font-size:24px;line-height:16px;margin-top:8px;animation:bounce 2s infinite}
-@keyframes bounce{0%,100%{transform:translateY(0);opacity:.65}50%{transform:translateY(5px);opacity:1}}
-/* Sections */
-.invite-text{font-family:"Cormorant Garamond",serif;font-size:22px;line-height:1.65;color:#5b4b39}
-.family{font-family:"Cormorant Garamond",serif;font-size:20px;line-height:1.45}
+/* =========================================
+   SECTIONS
+   ========================================= */
+.invite-text{font-family:"Cormorant Garamond",serif;font-size:clamp(19px,5.6vw,22px);line-height:1.65;color:#5b4b39}
+.family{font-family:"Cormorant Garamond",serif;font-size:clamp(18px,5vw,20px);line-height:1.45}
 .family .amp{color:var(--gold);font-style:italic;margin:2px 0}
-.couple-script{font-family:"Great Vibes",cursive;font-size:52px;color:#86663c;line-height:1}
-.prayer{font-family:"Cormorant Garamond",serif;font-size:21px;line-height:1.6;font-style:italic;color:#594936}
-.prayer-ar{font-family:"Noto Naskh Arabic",serif;font-size:25px;line-height:2;color:#5b4831;direction:rtl}
+.couple-script{font-family:"Great Vibes",cursive;font-size:clamp(40px,12.5vw,52px);color:#86663c;line-height:1.05}
+.prayer{font-family:"Cormorant Garamond",serif;font-size:clamp(18px,5.4vw,21px);line-height:1.6;font-style:italic;color:#594936}
+.prayer-ar{font-family:"Noto Naskh Arabic",serif;font-size:clamp(21px,6.4vw,25px);line-height:2;color:#5b4831;direction:rtl}
 .meta{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#927348}
 .date-big{font-family:"Cormorant Garamond",serif;font-size:48px;color:#80613a;line-height:1}
-.location-title{font-family:"Cormorant Garamond",serif;font-size:28px;font-weight:600}
-.btn{display:inline-block;padding:12px 23px;border:1px solid var(--gold);border-radius:999px;color:#8c6938;text-decoration:none;font-size:10px;letter-spacing:.18em;text-transform:uppercase;transition:.25s}
-.btn:hover{background:var(--gold);color:white}
+.location-title{font-family:"Cormorant Garamond",serif;font-size:clamp(24px,7vw,28px);line-height:1.25;font-weight:600}
+.btn{display:inline-block;padding:12px 23px;border:1px solid var(--gold);border-radius:999px;color:#8c6938;text-decoration:none;font-size:10px;letter-spacing:.18em;text-transform:uppercase;transition:background-color .25s,color .25s}
+@media (hover:hover){.btn:hover{background:var(--gold);color:#fff}}
 .icon-circle{width:52px;height:52px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--gold)}
+
 /* Timeline */
 .timeline{position:relative;max-width:330px;margin:0 auto;text-align:left}
 .timeline:before{content:"";position:absolute;left:13px;top:7px;bottom:7px;width:1px;background:linear-gradient(to bottom,transparent,var(--gold),transparent)}
@@ -519,42 +174,73 @@ main,
 .timeline-time{font-family:"Cormorant Garamond",serif;font-size:22px;color:#a0783d}
 .timeline-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#5a4936;margin-top:2px}
 .timeline-note{font-family:"Cormorant Garamond",serif;font-size:15px;color:#7a6955;margin-top:2px}
+
 /* Countdown */
-.countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.count-box{padding:12px 4px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.45)}
-.count-num{font-family:"Cormorant Garamond",serif;font-size:28px;color:#7e6038}
-.count-label{font-size:7px;letter-spacing:.16em;text-transform:uppercase;color:#8c7457}
+.countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(5px,1.8vw,8px)}
+.count-box{padding:12px 2px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.45)}
+.count-num{font-family:"Cormorant Garamond",serif;font-size:clamp(23px,7vw,30px);line-height:1.4;color:#7e6038;font-variant-numeric:tabular-nums}
+.count-label{font-size:clamp(7px,2.1vw,8px);letter-spacing:.14em;text-transform:uppercase;color:#8c7457}
+
 /* RSVP */
-.rsvp-btn{border:0;background:var(--gold);color:white;padding:14px 28px;border-radius:999px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 24px rgba(142,105,53,.2)}
+.rsvp-btn{border:0;background:var(--gold);color:#fff;padding:14px 28px;border-radius:999px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;box-shadow:0 8px 24px rgba(142,105,53,.2)}
 .rsvp-msg{display:none;margin-top:18px;font-family:"Cormorant Garamond",serif;font-size:19px;color:#85653c;font-style:italic}
-/* Music control */
-.music-btn{position:absolute;right:16px;bottom:16px;width:52px;height:52px;border-radius:50%;border:1px solid rgba(177,138,75,.65);background:rgba(248,240,230,.94);color:#8f6a35;display:none;align-items:center;justify-content:center;z-index:4;box-shadow:0 8px 24px rgba(72,50,28,.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
-.music-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(72,50,28,.2)}
-.music-btn svg{width:23px;height:23px}
+
 /* Calendar */
-.calendar{max-width:330px;margin:0 auto;border:1px solid var(--line);border-radius:20px;background:rgba(255,250,243,.55);padding:20px 18px}
+.calendar{max-width:330px;margin:0 auto;border:1px solid var(--line);border-radius:20px;background:rgba(255,250,243,.55);padding:clamp(14px,4.5vw,20px) clamp(10px,4vw,18px)}
 .calendar-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
-.calendar-month{font-family:"Cormorant Garamond",serif;font-size:28px;color:#80613a}
+.calendar-month{font-family:"Cormorant Garamond",serif;font-size:28px;line-height:1.2;color:#80613a}
 .calendar-year{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#927348}
-.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
-.calendar-dow{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#a28358;padding-bottom:6px}
-.calendar-day{height:34px;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:16px;color:#6e5a43;border-radius:50%}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(2px,1.4vw,6px);text-align:center}
+.calendar-dow{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#a28358;padding-bottom:6px}
+.calendar-day{height:clamp(28px,8.6vw,34px);aspect-ratio:1;max-width:100%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:clamp(14px,4.2vw,16px);color:#6e5a43;border-radius:50%}
 .calendar-day.muted{color:#b9a992}
 .calendar-day.selected{background:var(--gold);color:#fff;box-shadow:0 4px 12px rgba(177,138,75,.25)}
+
 /* Footer */
-footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond",serif;font-size:17px;color:#80694d}
-@media (max-width:439px){
-  .hero .names{font-size:61px}
-  .hero .welcome{font-size:25px}
-  .section{padding:62px 20px}
-  .card{border-radius:20px}
+footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align:center;font-family:"Cormorant Garamond",serif;font-size:17px;color:#80694d}
+
+/* Legacy text-hero styles (kept for the commented-out HTML version of the title) */
+.hero .welcome{font-family:"Cormorant Garamond",serif;font-size:26px;line-height:1.05;color:#735d42}
+.hero .of{font-family:"Cormorant Garamond",serif;font-size:17px;color:#8d6e42;margin:8px 0}
+.hero .names{font-family:"Great Vibes",cursive;font-size:67px;line-height:.9;color:#806039;letter-spacing:.01em}
+.hero .amp{font-family:"Cormorant Garamond",serif;font-size:31px;color:#a37a3e;line-height:1;margin:2px 0}
+
+/* =========================================
+   UTILITIES (the few Tailwind classes this page used)
+   ========================================= */
+.text-center{text-align:center}
+.italic{font-style:italic}
+.leading-relaxed{line-height:1.625}
+.text-base{font-size:1rem;line-height:1.5rem}
+.text-lg{font-size:1.125rem;line-height:1.75rem}
+.text-2xl{font-size:1.5rem;line-height:2rem}
+.text-4xl{font-size:clamp(1.85rem,8.6vw,2.25rem);line-height:1.15}
+.c-warm{color:#8a693d}
+.c-muted{color:#756653}
+.c-bronze{color:#80613a}
+.c-deep{color:#735938}
+.mt-2{margin-top:.5rem}
+.mt-3{margin-top:.75rem}
+.mt-4{margin-top:1rem}
+.mt-5{margin-top:1.25rem}
+.mt-6{margin-top:1.5rem}
+.mt-7{margin-top:1.75rem}
+.mt-8{margin-top:2rem}
+.mt-9{margin-top:2.25rem}
+.pt-2{padding-top:.5rem}
+.pb-20{padding-bottom:5rem}
+
+/* =========================================
+   MOTION PREFERENCES & LOW-POWER DEVICES
+   ========================================= */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .hero-title,.hero-flower,.scroll-cue span{animation:none}
+  .reveal{opacity:1;transform:none;transition:none}
 }
-@media (min-width:700px){
-  .page-shell{box-shadow:0 0 80px rgba(67,49,30,.18)}
-}
-
-
-
+/* Set by script on low-memory / low-core phones */
+.lite .hero-flower,.lite .hero-title{animation:none;will-change:auto}
+.lite .card{box-shadow:0 10px 28px rgba(72,50,28,.08)}
 </style>
 </head>
 <body class="no-scroll">
@@ -562,7 +248,7 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
 <!-- Opening envelope experience -->
 <div id="intro-overlay">
   <div class="intro-inner">
-    <button id="open-btn" aria-label="Open wedding invitation">Tap to open</button>
+    <button id="open-btn" type="button" aria-label="Open wedding invitation">Tap to open</button>
     <video id="envelope-vid" playsinline muted preload="auto">
       <source src="katie_saif_invelop_no_watermark.mp4" type="video/mp4">
     </video>
@@ -579,166 +265,82 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
   <!-- PAGE 1: intentionally minimal — no date -->
   <header class="hero">
     <div class="hero-media" aria-hidden="true">
-      <video id="bg-main-vid" autoplay loop muted playsinline preload="auto">
+      <!-- Not autoplayed: it starts after the envelope so two videos never decode at once -->
+      <video id="bg-main-vid" loop muted playsinline preload="metadata">
         <source src="https://pub-4dc8201144ca418fb604349c73e8c724.r2.dev/Newbeautifulvideo.mp4" type="video/mp4">
       </video>
-	      <div class="video-bottom-fade"></div>
-
+      <div class="video-bottom-fade"></div>
     </div>
-    <div class="hero-copy">
-	
-	
-	<img
-    src="Welcome to the Nikkah Ceremony (1).png"
-    alt="Welcome to the Nikkah Ceremony of Karishma & Saif"
-    class="hero-text-image"
-    >
 
-	
-   <!--   <div class="welcome">Welcome to the</div>
+    <h1 class="hero-title">
+      <picture>
+        <source srcset="assets/hero-title.webp" type="image/webp">
+        <img src="assets/hero-title.png" width="1024" height="764" alt="Welcome to the Nikkah Ceremony of Karishma &amp; Saif" decoding="async" fetchpriority="high">
+      </picture>
+    </h1>
+
+    <!--   <div class="welcome">Welcome to the</div>
       <div class="welcome" style="font-family:'Great Vibes',cursive;font-size:42px;margin-top:1px">Nikah Ceremony</div>
       <div class="of">of</div>
       <div class="names">Karishma</div>
       <div class="amp">&amp;</div>
       <div class="names">Saif</div>
-	  
-	  -->
-	  
-	  
-	  <div class="hero-flower hero-flower-left">
-    <img src="https://static.tildacdn.net/tild3238-6635-4563-b336-356564353735/Group_305.png"
-         alt=""
-         draggable="false">
-</div>
-<div class="hero-flower hero-flower-right">
-    <img src="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png"
-         alt=""
-         draggable="false">
-</div>
+    -->
 
+    <div class="hero-flower hero-flower-left" aria-hidden="true">
+      <img src="https://static.tildacdn.net/tild3238-6635-4563-b336-356564353735/Group_305.png" alt="" draggable="false" decoding="async">
     </div>
-    <div class="scroll-cue">Scroll down<span>⌄</span></div>
-	
+    <div class="hero-flower hero-flower-right" aria-hidden="true">
+      <img src="https://static.tildacdn.net/tild3935-6639-4836-b366-623864343762/Group_306.png" alt="" draggable="false" decoding="async">
+    </div>
 
+    <div class="scroll-cue" aria-hidden="true">Scroll<br>down<span>⌄</span></div>
 
-    <!-- Music control is anchored to the invitation canvas, not the browser viewport. -->
     <button id="music-btn" class="music-btn" type="button" aria-label="Pause music" title="Music">
       <svg id="music-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 5v14M17 5v14" stroke-linecap="round"/></svg>
       <svg id="music-play" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M8 5.5v13l10-6.5-10-6.5Z"/></svg>
     </button>
   </header>
 
-
-
-  <!-- scratch card animation -->
-  
   <!-- PAGE 2: SCRATCH THE DATE -->
-<section class="scratch-date-section">
-
-    <div class="scratch-date-title">
-        The Date
-    </div>
-
-    <div class="scratch-date-subtitle">
-        ✦ Scratch to reveal our date ✦
-    </div>
+  <section class="scratch-date-section">
+    <h2 class="scratch-date-title">The Date</h2>
+    <p class="scratch-date-subtitle">✦ Scratch to reveal our date ✦</p>
 
     <!-- Celebration effects -->
-    <canvas id="tdr-confetti"></canvas>
-    <div class="tdr-flash" id="tdr-flash"></div>
+    <canvas id="tdr-confetti" aria-hidden="true"></canvas>
+    <div class="tdr-flash" id="tdr-flash" aria-hidden="true"></div>
 
-    <!-- Scratch cards -->
-    <div class="tdr-root">
-        <div class="tdr-scene">
-            <div class="tdr-inner">
-
-                <div class="tdr-panels">
-
-                    <!-- DAY -->
-                    <div class="tdr-panel">
-                        <div class="tdr-tile" id="tdr-tile-day">
-
-                            <div class="tdr-tile-bg">
-                                <canvas
-                                    class="tdr-num-cvs"
-                                    id="tdr-numcvs-day">
-                                </canvas>
-                            </div>
-
-                            <canvas
-                                class="tdr-canvas"
-                                id="tdr-cvs-day">
-                            </canvas>
-
-                        </div>
-
-                        <div class="tdr-label">
-                            Day
-                        </div>
-                    </div>
-
-
-                    <!-- MONTH -->
-                    <div class="tdr-panel">
-                        <div class="tdr-tile" id="tdr-tile-month">
-
-                            <div class="tdr-tile-bg">
-                                <canvas
-                                    class="tdr-num-cvs"
-                                    id="tdr-numcvs-month">
-                                </canvas>
-                            </div>
-
-                            <canvas
-                                class="tdr-canvas"
-                                id="tdr-cvs-month">
-                            </canvas>
-
-                        </div>
-
-                        <div class="tdr-label">
-                            Month
-                        </div>
-                    </div>
-
-
-                    <!-- YEAR -->
-                    <div class="tdr-panel">
-                        <div class="tdr-tile" id="tdr-tile-year">
-
-                            <div class="tdr-tile-bg">
-                                <canvas
-                                    class="tdr-num-cvs"
-                                    id="tdr-numcvs-year">
-                                </canvas>
-                            </div>
-
-                            <canvas
-                                class="tdr-canvas"
-                                id="tdr-cvs-year">
-                            </canvas>
-
-                        </div>
-
-                        <div class="tdr-label">
-                            Year
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
+    <div class="tdr-panels" role="group" aria-label="Wedding date: 27 October 2026">
+      <div class="tdr-panel">
+        <div class="tdr-tile" id="tdr-tile-day">
+          <div class="tdr-tile-bg"><canvas class="tdr-num-cvs" id="tdr-numcvs-day"></canvas></div>
+          <canvas class="tdr-canvas" id="tdr-cvs-day" aria-label="Scratch to reveal the day"></canvas>
         </div>
+        <div class="tdr-label">Day</div>
+      </div>
+
+      <div class="tdr-panel">
+        <div class="tdr-tile" id="tdr-tile-month">
+          <div class="tdr-tile-bg"><canvas class="tdr-num-cvs" id="tdr-numcvs-month"></canvas></div>
+          <canvas class="tdr-canvas" id="tdr-cvs-month" aria-label="Scratch to reveal the month"></canvas>
+        </div>
+        <div class="tdr-label">Month</div>
+      </div>
+
+      <div class="tdr-panel">
+        <div class="tdr-tile" id="tdr-tile-year">
+          <div class="tdr-tile-bg"><canvas class="tdr-num-cvs" id="tdr-numcvs-year"></canvas></div>
+          <canvas class="tdr-canvas" id="tdr-cvs-year" aria-label="Scratch to reveal the year"></canvas>
+        </div>
+        <div class="tdr-label">Year</div>
+      </div>
     </div>
+  </section>
 
-</section>
-
-<!--edited by saifuuuu--->
-  
-  
   <!-- Invitation -->
   <section class="section">
-    <div class="card reveal p-7 md:p-10 text-center">
+    <div class="card reveal text-center">
       <div class="eyebrow">With Love &amp; Blessings</div>
       <div class="divider"></div>
       <p class="invite-text">
@@ -757,7 +359,7 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
 
   <!-- Prayer -->
   <section class="section pt-2">
-    <div class="card reveal p-7 md:p-10 text-center">
+    <div class="card reveal text-center">
       <div class="eyebrow">A Prayer for Our Journey</div>
       <div class="divider"></div>
       <p class="prayer">
@@ -765,7 +367,7 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
         and make us an example for the righteous.”
       </p>
       <p class="prayer-ar mt-5">
-        رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا
+        رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا
       </p>
       <p class="meta mt-4">Qur'an · 25:74</p>
     </div>
@@ -773,7 +375,7 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
 
   <!-- Date / time + calendar -->
   <section class="section pt-2">
-    <div class="card reveal p-7 md:p-10 text-center">
+    <div class="card reveal text-center">
       <div class="eyebrow">Save the Date</div>
       <div class="divider"></div>
       <div class="calendar mt-6">
@@ -791,14 +393,14 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
         </div>
       </div>
       <div class="mt-7 meta">Tuesday · 27 October 2026</div>
-      <div class="font-display text-2xl mt-2 text-[#8a693d]">5:30 PM onwards</div>
-      <div class="font-display text-base mt-2 text-[#756653]">Pune, Maharashtra</div>
+      <div class="font-display text-2xl mt-2 c-warm">5:30 PM onwards</div>
+      <div class="font-display text-base mt-2 c-muted">Pune, Maharashtra</div>
     </div>
   </section>
 
   <!-- Countdown -->
   <section class="section pt-2">
-    <div class="card reveal p-7 md:p-10 text-center">
+    <div class="card reveal text-center">
       <div class="eyebrow">Counting the moments</div>
       <div class="divider"></div>
       <div id="countdown" class="countdown mt-7">
@@ -812,7 +414,7 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
 
   <!-- Venue -->
   <section class="section pt-2">
-    <div class="card reveal p-7 md:p-10 text-center">
+    <div class="card reveal text-center">
       <div class="eyebrow">When &amp; Where</div>
       <div class="divider"></div>
 
@@ -823,7 +425,7 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
           </svg>
         </div>
         <div class="meta">Tuesday · 27 October 2026</div>
-        <div class="font-display text-2xl mt-2 text-[#80613a]">5:30 PM onwards</div>
+        <div class="font-display text-2xl mt-2 c-bronze">5:30 PM onwards</div>
       </div>
 
       <div class="mt-8">
@@ -834,12 +436,12 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
           </svg>
         </div>
         <div class="location-title">Samadhan Lawns &amp; Banquet Hall</div>
-        <p class="font-display text-lg leading-relaxed text-[#756653] mt-3">
+        <p class="font-display text-lg leading-relaxed c-muted mt-3">
           Kondhwa–Undri–Saswad Rd,<br>
           Autadwadi Handewadi, Handewadi,<br>
           Pune, Maharashtra 412308
         </p>
-        <p class="font-display text-lg italic text-[#80613a] mt-6">Join us as we begin this beautiful journey together.</p>
+        <p class="font-display text-lg italic c-bronze mt-6">Join us as we begin this beautiful journey together.</p>
         <a class="btn mt-5" href="https://maps.app.goo.gl/MJot1P494whFnSLo8?g_st=ic" target="_blank" rel="noopener noreferrer">
           View Location
         </a>
@@ -847,12 +449,12 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
     </div>
   </section>
 
-  <!-- Timeline: shifted to begin at 7 PM -->
+  <!-- Timeline -->
   <section class="section pt-2">
-    <div class="card reveal p-7 md:p-10">
+    <div class="card reveal">
       <div class="text-center">
         <div class="eyebrow">The Evening</div>
-        <h2 class="font-display text-4xl text-[#735938] mt-2">Wedding Timeline</h2>
+        <h2 class="font-display text-4xl c-deep mt-2">Wedding Timeline</h2>
         <div class="divider"></div>
       </div>
 
@@ -893,15 +495,15 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
 
   <!-- RSVP only; dress code and gifts intentionally removed -->
   <section class="section pt-2 pb-20">
-    <div class="card reveal p-7 md:p-10 text-center">
+    <div class="card reveal text-center">
       <div class="eyebrow">We'd love to have you with us</div>
-      <h2 class="font-display text-4xl text-[#735938] mt-2">Confirm Your Attendance</h2>
+      <h2 class="font-display text-4xl c-deep mt-2">Confirm Your Attendance</h2>
       <div class="divider"></div>
       <p class="invite-text text-lg">
         Kindly confirm your attendance and celebrate this beautiful evening with us.
       </p>
-      <button id="rsvp-btn" class="rsvp-btn mt-7">RSVP Now</button>
-      <div id="rsvp-msg" class="rsvp-msg">Thank you! We can't wait to celebrate with you.</div>
+      <button id="rsvp-btn" class="rsvp-btn mt-7" type="button">RSVP Now</button>
+      <div id="rsvp-msg" class="rsvp-msg" role="status">Thank you! We can't wait to celebrate with you.</div>
     </div>
   </section>
 
@@ -913,43 +515,76 @@ footer{padding:35px 20px 55px;text-align:center;font-family:"Cormorant Garamond"
 </div>
 
 
-
 <script>
+/* Always start at the envelope, even after a reload */
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+
+/* Low-power devices: drop the purely decorative loops */
+(function(){
+  var mem=navigator.deviceMemory, cores=navigator.hardwareConcurrency;
+  if((mem && mem<=2) || (cores && cores<=4 && /Android/i.test(navigator.userAgent))){
+    document.documentElement.classList.add('lite');
+  }
+})();
+
 const introOverlay=document.getElementById('intro-overlay');
 const openBtn=document.getElementById('open-btn');
 const envelopeVid=document.getElementById('envelope-vid');
 const bgMusic=document.getElementById('bg-music');
 const body=document.body;
+const hero=document.querySelector('.hero');
 
 const mainVideo=document.getElementById('bg-main-vid');
 const musicBtn=document.getElementById('music-btn');
 const musicPause=document.getElementById('music-pause');
 const musicPlay=document.getElementById('music-play');
 
-openBtn.addEventListener('click',()=>{
-  openBtn.style.display='none';
-  envelopeVid.style.display='block';
-  envelopeVid.currentTime=0;
-  envelopeVid.play().catch(()=>{});
-  bgMusic.volume=.45;
-  bgMusic.play().then(()=>{musicBtn.style.display='flex';}).catch(()=>{musicBtn.style.display='flex';});
-});
+let introDone=false;
+let heroVisible=true;
 
-envelopeVid.addEventListener('ended',()=>{
+function syncHeroVideo(){
+  if(introDone && heroVisible && !document.hidden){
+    mainVideo.play().catch(()=>{});
+  }else{
+    mainVideo.pause();
+  }
+}
+
+function finishIntro(){
+  if(introDone) return;
+  introDone=true;
   introOverlay.style.opacity='0';
   setTimeout(()=>{
     introOverlay.style.display='none';
     body.classList.remove('no-scroll');
-    mainVideo.currentTime=0;
-    mainVideo.play().catch(()=>{});
     musicBtn.style.display='flex';
+    envelopeVid.removeAttribute('src');
+    envelopeVid.load(); // release the envelope decoder
   },1000);
+  mainVideo.currentTime=0;
+  syncHeroVideo();
+}
+
+openBtn.addEventListener('click',()=>{
+  openBtn.style.display='none';
+  envelopeVid.style.display='block';
+  envelopeVid.currentTime=0;
+  envelopeVid.play().catch(finishIntro);
+  mainVideo.preload='auto'; // start buffering the hero while the envelope plays
+  bgMusic.volume=.45;
+  bgMusic.play().then(()=>{musicBtn.style.display='flex';}).catch(()=>{musicBtn.style.display='flex';});
 });
 
-// Keep the background video in the browser's normal media lifecycle.
-mainVideo.addEventListener('loadeddata',()=>{
-  mainVideo.play().catch(()=>{});
-});
+envelopeVid.addEventListener('ended',finishIntro);
+envelopeVid.addEventListener('error',finishIntro);
+
+/* Hero video + decorative loops only run while the hero is on screen */
+new IntersectionObserver((entries)=>{
+  heroVisible=entries[0].isIntersecting;
+  hero.classList.toggle('is-offscreen',!heroVisible);
+  syncHeroVideo();
+},{threshold:0}).observe(hero);
+document.addEventListener('visibilitychange',syncHeroVideo);
 
 musicBtn.addEventListener('click',()=>{
   if(bgMusic.paused){
@@ -969,29 +604,31 @@ musicBtn.addEventListener('click',()=>{
 /* Scroll reveals */
 const observer=new IntersectionObserver((entries)=>{
   entries.forEach(entry=>{
-    if(entry.isIntersecting) entry.target.classList.add('active');
+    if(entry.isIntersecting){
+      entry.target.classList.add('active');
+      observer.unobserve(entry.target);
+    }
   });
 },{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 
-/* Countdown — 27 Oct 2026, 7:00 PM IST */
+/* Countdown — 27 Oct 2026, 5:30 PM IST */
 const target=new Date('2026-10-27T17:30:00+05:30').getTime();
+const cd={d:document.getElementById('days'),h:document.getElementById('hours'),m:document.getElementById('minutes'),s:document.getElementById('seconds')};
+let countdownTimer;
 function updateCountdown(){
   const diff=target-Date.now();
   if(diff<=0){
+    clearInterval(countdownTimer);
     document.getElementById('countdown').innerHTML='<div style="grid-column:1/-1;font-family:Cormorant Garamond,serif;font-size:25px;color:#80613a;padding:12px">The day has arrived.</div>';
     return;
   }
-  const d=Math.floor(diff/86400000);
-  const h=Math.floor((diff%86400000)/3600000);
-  const m=Math.floor((diff%3600000)/60000);
-  const s=Math.floor((diff%60000)/1000);
-  document.getElementById('days').textContent=String(d).padStart(2,'0');
-  document.getElementById('hours').textContent=String(h).padStart(2,'0');
-  document.getElementById('minutes').textContent=String(m).padStart(2,'0');
-  document.getElementById('seconds').textContent=String(s).padStart(2,'0');
+  cd.d.textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+  cd.h.textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+  cd.m.textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+  cd.s.textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
 }
-updateCountdown(); setInterval(updateCountdown,1000);
+updateCountdown(); countdownTimer=setInterval(updateCountdown,1000);
 
 /* RSVP */
 document.getElementById('rsvp-btn').addEventListener('click',function(){
@@ -1001,725 +638,365 @@ document.getElementById('rsvp-btn').addEventListener('click',function(){
 </script>
 
 
-
-
-
 <script>
+/* ================================
+   SCRATCH-TO-REVEAL DATE
+   ================================ */
 document.addEventListener("DOMContentLoaded", function () {
-
     "use strict";
 
-    /* ================================
-       WEDDING DATE
-       ================================ */
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var lite = document.documentElement.classList.contains("lite");
 
-    var t = {
-        day: "27",
-        month: "October",
-        year: "2026"
-    };
-
-    var e = [
-        {
-            tileId: "tdr-tile-day",
-            scratchId: "tdr-cvs-day",
-            numId: "tdr-numcvs-day",
-            value: t.day,
-            isMonth: false
-        },
-        {
-            tileId: "tdr-tile-month",
-            scratchId: "tdr-cvs-month",
-            numId: "tdr-numcvs-month",
-            value: t.month,
-            isMonth: true
-        },
-        {
-            tileId: "tdr-tile-year",
-            scratchId: "tdr-cvs-year",
-            numId: "tdr-numcvs-year",
-            value: t.year,
-            isMonth: false
-        }
+    var cards = [
+        { tileId: "tdr-tile-day",   scratchId: "tdr-cvs-day",   numId: "tdr-numcvs-day",   value: "27"   },
+        { tileId: "tdr-tile-month", scratchId: "tdr-cvs-month", numId: "tdr-numcvs-month", value: "Oct"  },
+        { tileId: "tdr-tile-year",  scratchId: "tdr-cvs-year",  numId: "tdr-numcvs-year",  value: "2026" }
     ];
 
+    var FONT_FAMILY = "'Rufina', serif";
     var revealedCount = 0;
     var celebrationStarted = false;
 
 
-    function clamp(value, min, max) {
-        return Math.max(min, Math.min(max, value));
-    }
-
-
-    /* ================================
-       SCRATCH COVER DESIGN
-       ================================ */
+    /* ---------- Scratch cover ---------- */
 
     function drawScratchCover(ctx, width, height) {
-
-        var gradient = ctx.createLinearGradient(
-            0,
-            0,
-            width,
-            height
-        );
-
+        var gradient = ctx.createLinearGradient(0, 0, width, height);
         gradient.addColorStop(0, "#FFFDF7");
         gradient.addColorStop(0.24, "#F9EEDC");
         gradient.addColorStop(0.52, "#EED8B8");
         gradient.addColorStop(0.78, "#D7B67F");
         gradient.addColorStop(1, "#B98238");
-
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, width, height);
 
-
-        var glow = ctx.createRadialGradient(
-            0.42 * width,
-            0.25 * height,
-            0,
-            0.42 * width,
-            0.25 * height,
-            0.82 * width
-        );
-
+        var glow = ctx.createRadialGradient(0.42 * width, 0.25 * height, 0, 0.42 * width, 0.25 * height, 0.82 * width);
         glow.addColorStop(0, "rgba(255,255,252,0.98)");
         glow.addColorStop(0.3, "rgba(255,247,229,0.58)");
         glow.addColorStop(0.67, "rgba(245,222,185,0.12)");
         glow.addColorStop(1, "rgba(245,222,185,0)");
-
         ctx.fillStyle = glow;
         ctx.fillRect(0, 0, width, height);
 
-
+        // Satin stripes, batched into one path per colour
         ctx.globalAlpha = 0.085;
-
+        ctx.strokeStyle = "#FFF9EC";
+        ctx.lineWidth = 8;
+        ctx.beginPath();
         for (var x = -height; x < width + height; x += 22) {
-            ctx.beginPath();
             ctx.moveTo(x, 0);
             ctx.lineTo(x + 0.72 * height, height);
-            ctx.strokeStyle = "#FFF9EC";
-            ctx.lineWidth = 8;
-            ctx.stroke();
         }
+        ctx.stroke();
 
         ctx.globalAlpha = 0.045;
-
+        ctx.strokeStyle = "#A66C20";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
         for (var x2 = 11 - height; x2 < width + height; x2 += 22) {
-            ctx.beginPath();
             ctx.moveTo(x2, 0);
             ctx.lineTo(x2 + 0.72 * height, height);
-            ctx.strokeStyle = "#A66C20";
-            ctx.lineWidth = 2;
-            ctx.stroke();
         }
+        ctx.stroke();
 
-        ctx.globalAlpha = 1;
-
-
-        var dots = [
-            [0.14 * width, 0.18 * height],
-            [0.50 * width, 0.10 * height],
-            [0.84 * width, 0.22 * height],
-            [0.22 * width, 0.78 * height],
-            [0.72 * width, 0.82 * height],
-            [0.88 * width, 0.58 * height],
-            [0.08 * width, 0.52 * height],
-            [0.62 * width, 0.42 * height],
-            [0.38 * width, 0.62 * height]
-        ];
-
-        dots.forEach(function (point, index) {
-
-            var px = point[0];
-            var py = point[1];
+        // Sparkles
+        ctx.globalAlpha = 0.34;
+        [[0.14, 0.18], [0.50, 0.10], [0.84, 0.22], [0.22, 0.78], [0.72, 0.82],
+         [0.88, 0.58], [0.08, 0.52], [0.62, 0.42], [0.38, 0.62]].forEach(function (p, index) {
+            var px = p[0] * width, py = p[1] * height;
             var radius = index % 3 === 0 ? 7 : 5;
-
-            var dot = ctx.createRadialGradient(
-                px,
-                py,
-                0,
-                px,
-                py,
-                radius
-            );
-
+            var dot = ctx.createRadialGradient(px, py, 0, px, py, radius);
             dot.addColorStop(0, "rgba(255,255,250,1)");
             dot.addColorStop(0.4, "rgba(255,239,206,0.42)");
             dot.addColorStop(1, "rgba(255,230,183,0)");
-
             ctx.fillStyle = dot;
-            ctx.globalAlpha = 0.34;
-
             ctx.beginPath();
             ctx.arc(px, py, radius, 0, 2 * Math.PI);
             ctx.fill();
         });
-
         ctx.globalAlpha = 1;
 
         ctx.strokeStyle = "rgba(255,253,246,0.88)";
         ctx.lineWidth = 1.5;
-        ctx.strokeRect(
-            0.75,
-            0.75,
-            width - 1.5,
-            height - 1.5
-        );
-
+        ctx.strokeRect(0.75, 0.75, width - 1.5, height - 1.5);
         ctx.strokeStyle = "rgba(171,108,29,0.22)";
         ctx.lineWidth = 1;
-        ctx.strokeRect(
-            2.25,
-            2.25,
-            width - 4.5,
-            height - 4.5
-        );
+        ctx.strokeRect(2.25, 2.25, width - 4.5, height - 4.5);
     }
 
 
-    /* ================================
-       REVEALED NUMBER
-       ================================ */
+    /* ---------- Revealed value ----------
+       One shared size for all three tiles (fitted to the widest value),
+       one shared baseline, and each value centred on its actual ink. */
 
-    function drawNumber(canvas, value, isMonth) {
+    function sharedFontSize(ctx, width, height) {
+        var size = height * 0.4;
+        ctx.font = "400 " + size + "px " + FONT_FAMILY;
+        var widest = 0;
+        cards.forEach(function (c) {
+            widest = Math.max(widest, ctx.measureText(c.value).width);
+        });
+        var maxWidth = width * 0.74;
+        return widest > maxWidth ? size * maxWidth / widest : size;
+    }
 
-        var ctx = canvas.getContext("2d");
-
-        var dpr = window.devicePixelRatio || 1;
-
+    function drawValue(canvas, value) {
         var width = canvas.clientWidth;
         var height = canvas.clientHeight;
-
         if (!width || !height) return;
 
+        var dpr = Math.min(window.devicePixelRatio || 1, 3);
         canvas.width = Math.round(width * dpr);
         canvas.height = Math.round(height * dpr);
 
-        ctx.setTransform(
-            dpr,
-            0,
-            0,
-            dpr,
-            0,
-            0
-        );
-
+        var ctx = canvas.getContext("2d");
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, width, height);
 
-        var viewportWidth = window.innerWidth;
+        var size = sharedFontSize(ctx, width, height);
+        ctx.font = "400 " + size + "px " + FONT_FAMILY;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "alphabetic";
 
-        var fontSize = isMonth
-            ? clamp(20, 0.047 * viewportWidth, 34)
-            : clamp(28, 0.065 * viewportWidth, 38);
+        // Baseline from the cap height of the digits, so "27", "Oct" and "2026" line up
+        var cap = ctx.measureText("0").actualBoundingBoxAscent || size * 0.68;
+        var baseline = height / 2 + cap / 2;
 
-        ctx.font = "400 " + fontSize + "px 'Rufina', serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
+        var m = ctx.measureText(value);
+        var inkLeft = m.actualBoundingBoxLeft || 0;
+        var inkRight = m.actualBoundingBoxRight || m.width;
+        var x = width / 2 - (inkRight - inkLeft) / 2;
 
-        var centerX = width / 2;
-        var centerY = height / 2;
+        ctx.fillStyle = "rgba(255,244,218,0.55)";
+        ctx.fillText(value, x, baseline + 1);
 
-        ctx.fillStyle = "rgba(255,244,218,0.40)";
-        ctx.fillText(
-            value,
-            centerX,
-            centerY + 1
-        );
-
-        var textGradient = ctx.createLinearGradient(
-            0,
-            centerY - fontSize / 2,
-            0,
-            centerY + fontSize / 2
-        );
-
+        var textGradient = ctx.createLinearGradient(0, baseline - cap, 0, baseline);
         textGradient.addColorStop(0, "#D6A64E");
         textGradient.addColorStop(0.48, "#B8781F");
         textGradient.addColorStop(1, "#8C5715");
-
         ctx.fillStyle = textGradient;
-
-        ctx.fillText(
-            value,
-            centerX,
-            centerY
-        );
+        ctx.fillText(value, x, baseline);
     }
 
 
-    /* ================================
-       CONFETTI
-       ================================ */
+    /* ---------- Confetti ---------- */
 
     function celebrate() {
-
         var flash = document.getElementById("tdr-flash");
-
-        if (flash) {
-            flash.classList.add("tdr-go");
-        }
+        if (flash) flash.classList.add("tdr-go");
+        if (reduceMotion) return;
 
         var canvas = document.getElementById("tdr-confetti");
-
         if (!canvas) return;
-
         var ctx = canvas.getContext("2d");
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        var vw = window.innerWidth, vh = window.innerHeight;
+        var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        canvas.style.display = "block";
+        canvas.width = Math.round(vw * dpr);
+        canvas.height = Math.round(vh * dpr);
 
-        var colors = [
-            "#B97820",
-            "#D5A54D",
-            "#E5C98F",
-            "#F4E8D3",
-            "#FFF9EF",
-            "#C38A35",
-            "#93601B",
-            "#EAD8B8"
-        ];
-
-        var particles = Array.from(
-            { length: 80 },
-            function () {
-
-                return {
-                    x: Math.random() * canvas.width,
-                    y: -15 - 160 * Math.random(),
-                    vy: 1.1 * Math.random() + 0.5,
-                    vx: 0.9 * (Math.random() - 0.5),
-                    w: 10 * Math.random() + 2.5,
-                    h: 3.5 * Math.random() + 1.2,
-                    rot: Math.random() * Math.PI * 2,
-                    rv: 0.055 * (Math.random() - 0.5),
-                    color: colors[
-                        Math.floor(
-                            Math.random() * colors.length
-                        )
-                    ],
-                    alpha: 0.6 * Math.random() + 0.38,
-                    drift: Math.random() * Math.PI * 2,
-                    ds: 0.016 * Math.random() + 0.007
-                };
-            }
-        );
-
-        var frame = 0;
-        var totalFrames = 320;
-
-        function animateConfetti() {
-
-            ctx.clearRect(
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-            var remaining =
-                Math.max(
-                    0,
-                    1 - frame / totalFrames
-                );
-
-            particles.forEach(function (particle) {
-
-                ctx.save();
-
-                ctx.globalAlpha =
-                    particle.alpha * remaining;
-
-                ctx.translate(
-                    particle.x,
-                    particle.y
-                );
-
-                ctx.rotate(
-                    particle.rot
-                );
-
-                ctx.fillStyle =
-                    particle.color;
-
-                ctx.fillRect(
-                    -particle.w / 2,
-                    -particle.h / 2,
-                    particle.w,
-                    particle.h
-                );
-
-                ctx.restore();
-
-
-                particle.y += particle.vy;
-
-                particle.x +=
-                    particle.vx +
-                    0.4 *
-                    Math.sin(particle.drift);
-
-                particle.rot += particle.rv;
-                particle.drift += particle.ds;
-
-
-                if (
-                    particle.y >
-                    canvas.height + 20
-                ) {
-                    particle.y = -15;
-                    particle.x =
-                        Math.random() *
-                        canvas.width;
-                }
-
+        var colors = ["#B97820", "#D5A54D", "#E5C98F", "#F4E8D3", "#FFF9EF", "#C38A35", "#93601B", "#EAD8B8"];
+        var count = lite ? 36 : (vw < 600 ? 60 : 80);
+        var particles = [];
+        for (var i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * vw,
+                y: -15 - 160 * Math.random(),
+                vy: 1.1 * Math.random() + 0.5,
+                vx: 0.9 * (Math.random() - 0.5),
+                w: 10 * Math.random() + 2.5,
+                h: 3.5 * Math.random() + 1.2,
+                rot: Math.random() * Math.PI * 2,
+                rv: 0.055 * (Math.random() - 0.5),
+                color: colors[Math.floor(Math.random() * colors.length)],
+                alpha: 0.6 * Math.random() + 0.38,
+                drift: Math.random() * Math.PI * 2,
+                ds: 0.016 * Math.random() + 0.007
             });
-
-            frame++;
-
-            if (frame < totalFrames) {
-                requestAnimationFrame(
-                    animateConfetti
-                );
-            } else {
-                ctx.clearRect(
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
-            }
         }
 
-        animateConfetti();
+        var DURATION = 5300; // ms — time-based so 60Hz and 120Hz phones match
+        var start = 0, last = 0;
+
+        function frame(now) {
+            if (!start) { start = last = now; }
+            var step = Math.min((now - last) / 16.667, 3);
+            last = now;
+            var remaining = Math.max(0, 1 - (now - start) / DURATION);
+
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (var i = 0; i < particles.length; i++) {
+                var p = particles[i];
+                var cos = Math.cos(p.rot) * dpr, sin = Math.sin(p.rot) * dpr;
+                ctx.setTransform(cos, sin, -sin, cos, p.x * dpr, p.y * dpr);
+                ctx.globalAlpha = p.alpha * remaining;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+
+                p.y += p.vy * step;
+                p.x += (p.vx + 0.4 * Math.sin(p.drift)) * step;
+                p.rot += p.rv * step;
+                p.drift += p.ds * step;
+                if (p.y > vh + 20) {
+                    p.y = -15;
+                    p.x = Math.random() * vw;
+                }
+            }
+
+            if (remaining > 0) {
+                requestAnimationFrame(frame);
+            } else {
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                canvas.style.display = "none";
+            }
+        }
+        requestAnimationFrame(frame);
     }
 
 
-    /* ================================
-       INITIALIZE EACH CARD
-       ================================ */
+    /* ---------- Each card ---------- */
 
-    e.forEach(function (item) {
+    var numberCanvases = [];
 
-        var tile =
-            document.getElementById(
-                item.tileId
-            );
+    cards.forEach(function (item) {
+        var tile = document.getElementById(item.tileId);
+        var scratchCanvas = document.getElementById(item.scratchId);
+        var numberCanvas = document.getElementById(item.numId);
 
-        var scratchCanvas =
-            document.getElementById(
-                item.scratchId
-            );
-
-        var numberCanvas =
-            document.getElementById(
-                item.numId
-            );
-
-        if (
-            !tile ||
-            !scratchCanvas ||
-            !numberCanvas
-        ) {
-            console.error(
-                "Scratch card element missing:",
-                item
-            );
+        if (!tile || !scratchCanvas || !numberCanvas) {
+            console.error("Scratch card element missing:", item);
             return;
         }
+        numberCanvases.push({ canvas: numberCanvas, value: item.value });
 
-
-        var ctx =
-            scratchCanvas.getContext("2d");
-
-
-        var drawing = false;
-        var revealed = false;
-
+        var ctx = scratchCanvas.getContext("2d", { willReadFrequently: true });
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var cssWidth = 0, cssHeight = 0, brush = 30;
+        var drawing = false, revealed = false, last = null, moves = 0;
 
         function resizeCard() {
+            var rect = tile.getBoundingClientRect();
+            var w = Math.round(rect.width), h = Math.round(rect.height);
+            if (!w || !h) return;
 
-            var rect =
-                tile.getBoundingClientRect();
+            // Only redraw on a real size change (mobile URL-bar show/hide fires resize too)
+            if (w !== cssWidth || h !== cssHeight) {
+                var hadCover = cssWidth > 0 && !revealed;
+                var previous = null;
+                if (hadCover) {
+                    previous = document.createElement("canvas");
+                    previous.width = scratchCanvas.width;
+                    previous.height = scratchCanvas.height;
+                    previous.getContext("2d").drawImage(scratchCanvas, 0, 0);
+                }
 
-            scratchCanvas.width =
-                Math.round(rect.width);
+                cssWidth = w; cssHeight = h;
+                brush = Math.max(18, w * 0.26);
+                scratchCanvas.width = Math.round(w * dpr);
+                scratchCanvas.height = Math.round(h * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            scratchCanvas.height =
-                Math.round(rect.height);
-
-
-            if (!revealed) {
-
-                drawScratchCover(
-                    ctx,
-                    scratchCanvas.width,
-                    scratchCanvas.height
-                );
-
+                if (!revealed) {
+                    drawScratchCover(ctx, w, h);
+                    if (previous) {
+                        // keep what the guest already scratched
+                        ctx.globalCompositeOperation = "destination-in";
+                        ctx.drawImage(previous, 0, 0, w, h);
+                        ctx.globalCompositeOperation = "source-over";
+                    }
+                }
+                drawValue(numberCanvas, item.value);
             }
-
-
-            drawNumber(
-                numberCanvas,
-                item.value,
-                item.isMonth
-            );
         }
 
-
-        function getPoint(
-            clientX,
-            clientY
-        ) {
-
-            var rect =
-                scratchCanvas.getBoundingClientRect();
-
+        function getPoint(event) {
+            var rect = scratchCanvas.getBoundingClientRect();
             return {
-                x:
-                    (clientX - rect.left) *
-                    (
-                        scratchCanvas.width /
-                        rect.width
-                    ),
-
-                y:
-                    (clientY - rect.top) *
-                    (
-                        scratchCanvas.height /
-                        rect.height
-                    )
+                x: (event.clientX - rect.left) * (cssWidth / rect.width),
+                y: (event.clientY - rect.top) * (cssHeight / rect.height)
             };
         }
 
-
-        function scratch(x, y) {
-
-            if (revealed) return;
-
-
-            ctx.globalCompositeOperation =
-                "destination-out";
-
+        function scratchTo(from, to) {
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.strokeStyle = "#000"; // must be opaque or the eraser only fades the cover
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.lineWidth = brush * 2;
             ctx.beginPath();
-
-            ctx.arc(
-                x,
-                y,
-                36,
-                0,
-                2 * Math.PI
-            );
-
-            ctx.fillStyle =
-                "rgba(0,0,0,1)";
-
-            ctx.fill();
-
-            ctx.globalCompositeOperation =
-                "source-over";
-
-
-            checkRevealProgress();
+            ctx.moveTo(from.x, from.y);
+            ctx.lineTo(to.x + 0.01, to.y);
+            ctx.stroke();
+            ctx.globalCompositeOperation = "source-over";
         }
-
 
         function checkRevealProgress() {
-
-            /* Check only occasionally for performance */
-            if (Math.random() > 0.12) {
-                return;
-            }
-
-
-            var image =
-                ctx.getImageData(
-                    0,
-                    0,
-                    scratchCanvas.width,
-                    scratchCanvas.height
-                ).data;
-
-
-            var total = 0;
-            var cleared = 0;
-
-
-            for (
-                var i = 3;
-                i < image.length;
-                i += 12
-            ) {
-
+            if (revealed) return;
+            var data = ctx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height).data;
+            var total = 0, cleared = 0;
+            for (var i = 3; i < data.length; i += 32) {
                 total++;
-
-                if (image[i] <= 10) {
-                    cleared++;
-                }
+                if (data[i] <= 10) cleared++;
             }
-
-
-            var revealedPercent =
-                cleared / total;
-
-
-            if (revealedPercent > 0.40) {
-
+            if (cleared / total > 0.4) {
                 revealed = true;
-
-                scratchCanvas.style.display =
-                    "none";
-
+                drawing = false;
+                scratchCanvas.classList.add("is-cleared");
                 revealedCount++;
-
-
-                if (
-                    revealedCount === 3 &&
-                    !celebrationStarted
-                ) {
-
+                if (revealedCount === cards.length && !celebrationStarted) {
                     celebrationStarted = true;
-
-                    setTimeout(
-                        celebrate,
-                        550
-                    );
+                    setTimeout(celebrate, 550);
                 }
             }
         }
 
-
         resizeCard();
+        if ("ResizeObserver" in window) {
+            new ResizeObserver(resizeCard).observe(tile);
+        } else {
+            window.addEventListener("resize", resizeCard);
+        }
 
-        window.addEventListener(
-            "resize",
-            resizeCard
-        );
+        scratchCanvas.addEventListener("pointerdown", function (event) {
+            if (revealed) return;
+            event.preventDefault();
+            drawing = true;
+            try { scratchCanvas.setPointerCapture(event.pointerId); } catch (err) {}
+            last = getPoint(event);
+            scratchTo(last, last);
+        });
 
+        scratchCanvas.addEventListener("pointermove", function (event) {
+            if (!drawing || revealed) return;
+            var point = getPoint(event);
+            scratchTo(last, point);
+            last = point;
+            if (++moves % 8 === 0) checkRevealProgress();
+        });
 
-        scratchCanvas.addEventListener(
-            "mousedown",
-            function (event) {
-
-                drawing = true;
-
-                var point =
-                    getPoint(
-                        event.clientX,
-                        event.clientY
-                    );
-
-                scratch(
-                    point.x,
-                    point.y
-                );
-            }
-        );
-
-
-        scratchCanvas.addEventListener(
-            "mousemove",
-            function (event) {
-
-                if (!drawing) return;
-
-                var point =
-                    getPoint(
-                        event.clientX,
-                        event.clientY
-                    );
-
-                scratch(
-                    point.x,
-                    point.y
-                );
-            }
-        );
-
-
-        scratchCanvas.addEventListener(
-            "mouseup",
-            function () {
-                drawing = false;
-            }
-        );
-
-
-        scratchCanvas.addEventListener(
-            "mouseleave",
-            function () {
-                drawing = false;
-            }
-        );
-
-
-        scratchCanvas.addEventListener(
-            "touchstart",
-            function (event) {
-
-                event.preventDefault();
-
-                drawing = true;
-
-                var touch =
-                    event.touches[0];
-
-                var point =
-                    getPoint(
-                        touch.clientX,
-                        touch.clientY
-                    );
-
-                scratch(
-                    point.x,
-                    point.y
-                );
-            },
-            { passive: false }
-        );
-
-
-        scratchCanvas.addEventListener(
-            "touchmove",
-            function (event) {
-
-                event.preventDefault();
-
-                if (!drawing) return;
-
-                var touch =
-                    event.touches[0];
-
-                var point =
-                    getPoint(
-                        touch.clientX,
-                        touch.clientY
-                    );
-
-                scratch(
-                    point.x,
-                    point.y
-                );
-            },
-            { passive: false }
-        );
-
-
-        scratchCanvas.addEventListener(
-            "touchend",
-            function (event) {
-
-                event.preventDefault();
-
-                drawing = false;
-            },
-            { passive: false }
-        );
-
+        function endStroke() {
+            if (!drawing) return;
+            drawing = false;
+            checkRevealProgress();
+        }
+        scratchCanvas.addEventListener("pointerup", endStroke);
+        scratchCanvas.addEventListener("pointercancel", endStroke);
+        scratchCanvas.addEventListener("lostpointercapture", endStroke);
     });
 
+    // Canvas text can't use a web font until it has loaded — redraw once Rufina is ready
+    function redrawValues() {
+        numberCanvases.forEach(function (n) { drawValue(n.canvas, n.value); });
+    }
+    if (document.fonts && document.fonts.load) {
+        document.fonts.load("400 40px Rufina").then(redrawValues, function () {});
+        document.fonts.ready.then(redrawValues);
+    }
 });
 </script>
 
