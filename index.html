@@ -308,15 +308,6 @@ a{color:inherit;text-decoration:inherit}
 @media (hover:hover){.btn:hover{background:var(--gold);color:#fff}}
 .icon-circle{width:52px;height:52px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--gold)}
 
-/* Timeline */
-.timeline{position:relative;max-width:330px;margin:0 auto;text-align:left}
-.timeline:before{content:"";position:absolute;left:13px;top:7px;bottom:7px;width:1px;background:linear-gradient(to bottom,transparent,var(--gold),transparent)}
-.timeline-item{position:relative;padding-left:40px;margin-bottom:28px}
-.timeline-dot{position:absolute;left:7px;top:6px;width:13px;height:13px;border-radius:50%;background:#fff9ef;border:2px solid var(--gold);box-shadow:0 0 0 4px rgba(177,138,75,.08)}
-.timeline-time{font-family:"Cormorant Garamond",serif;font-size:22px;color:#a0783d}
-.timeline-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#5a4936;margin-top:2px}
-.timeline-note{font-family:"Cormorant Garamond",serif;font-size:15px;color:#7a6955;margin-top:2px}
-
 /* Countdown */
 .countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(5px,1.8vw,8px)}
 .count-box{padding:12px 2px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.45)}
@@ -711,50 +702,6 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
         <a class="btn mt-5" href="https://maps.app.goo.gl/MJot1P494whFnSLo8?g_st=ic" target="_blank" rel="noopener noreferrer">
           View Location
         </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Timeline -->
-  <section class="section pt-2">
-    <div class="card deco-a reveal">
-      <div class="text-center">
-        <div class="eyebrow">The Evening</div>
-        <h2 class="font-display text-4xl c-deep mt-2">Wedding Timeline</h2>
-        <div class="divider"></div>
-      </div>
-
-      <div class="timeline mt-9">
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time">5:30 PM</div>
-          <div class="timeline-title">Guest Arrival</div>
-          <div class="timeline-note">Welcome &amp; greetings</div>
-        </div>
-
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time">6:00 PM</div>
-          <div class="timeline-title">Bride and Groom Entrance</div>
-        </div>
-
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time">6:30 PM</div>
-          <div class="timeline-title">Nikah &amp; Salat al-Magrib</div>
-        </div>
-
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time">7:00 PM</div>
-          <div class="timeline-title">Buffet Opening</div>
-        </div>
-
-        <div class="timeline-item" style="margin-bottom:0">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time">8:00 PM</div>
-          <div class="timeline-title">Celebrations Continue</div>
-        </div>
       </div>
     </div>
   </section>
