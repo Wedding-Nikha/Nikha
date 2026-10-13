@@ -296,7 +296,13 @@ a{color:inherit;text-decoration:inherit}
    SECTIONS
    ========================================= */
 .invite-text{font-family:"Cormorant Garamond",serif;font-size:clamp(19px,5.6vw,22px);line-height:1.65;color:#5b4b39}
-.family{font-family:"Cormorant Garamond",serif;font-size:clamp(18px,5vw,20px);line-height:1.45}
+.invite-text.invite-copy{font-size:clamp(17px,4.8vw,19px);line-height:1.6;text-wrap:balance}
+.invite-eyebrow{font-family:"Cormorant Garamond",serif;font-size:clamp(13px,3.7vw,15px);font-weight:500;letter-spacing:.26em;line-height:1.8;text-transform:uppercase;color:#9b753b;padding-left:.26em}
+.ornament{display:flex;align-items:center;justify-content:center;gap:12px;margin:16px auto;width:min(220px,70%);color:var(--gold);font-size:13px;line-height:1}
+.ornament::before,.ornament::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+.ornament::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.ornament-sm{width:min(150px,50%);font-size:10px;gap:8px;margin-bottom:22px}
+.family{font-family:"Cormorant Garamond",serif;font-size:clamp(17px,5vw,23px);line-height:1.45;color:#4f4031}
 .family .amp{color:var(--gold);font-style:italic;margin:2px 0}
 .couple-script{font-family:"Great Vibes",cursive;font-size:clamp(40px,12.5vw,52px);color:#86663c;line-height:1.05}
 .prayer{font-family:"Cormorant Garamond",serif;font-size:clamp(18px,5.4vw,21px);line-height:1.6;font-style:italic;color:#594936}
@@ -598,19 +604,29 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
   <!-- Invitation -->
   <section class="section">
     <div class="card deco-a reveal text-center">
-      <div class="eyebrow">With Love &amp; Blessings</div>
-      <div class="divider"></div>
-      <p class="invite-text">
-        With the blessings of Almighty Allah, We joyfully invite you to join us
-        as we begin our journey together.
-      </p>
+      <div class="ornament" aria-hidden="true"><span>&#x2726;&#xFE0E;</span></div>
+      <div class="invite-eyebrow">With the blessings of<br>Almighty Allah</div>
+      <div class="ornament ornament-sm" aria-hidden="true"><span>&#x25C7;&#xFE0E;</span></div>
 
-      <div class="mt-8 family">
-        <div>Mr. Ayubbhai Gulabbhai Tamboli &amp; Mrs. Hasina Tamboli</div>
+      <div class="family">
+        Mr. Ayubbhai Gulabbhai Tamboli &amp;<br>Mrs. Hasina Tamboli
       </div>
 
-      <div class="mt-8 meta">Joyfully invite you to the Nikah Ceremony of</div>
-      <div class="couple-script mt-4">Karishma &amp; Saif</div>
+      <p class="invite-text invite-copy mt-4">
+        cordially invite you to the Nikah ceremony
+        of their beloved children,
+      </p>
+
+      <div class="couple-script mt-6">Karishma &amp; Saif</div>
+      <div class="ornament mt-4" aria-hidden="true"><span>&#x2726;&#xFE0E;</span></div>
+
+      <p class="invite-text invite-copy mt-4">
+        as they begin their journey together<br>in the sacred bond of marriage.
+      </p>
+      <p class="invite-text invite-copy mt-6">
+        Your gracious presence and blessings will make
+        this joyous occasion even more special.
+      </p>
     </div>
   </section>
 
