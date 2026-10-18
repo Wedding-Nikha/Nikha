@@ -666,7 +666,7 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
         </div>
       </div>
       <div class="mt-7 meta">Tuesday · 27 October 2026</div>
-      <div class="font-display text-2xl mt-2 c-warm">5:30 PM onwards</div>
+      <div class="font-display text-2xl mt-2 c-warm">6:30 PM onwards</div>
       <div class="font-display text-base mt-2 c-muted">Pune, Maharashtra</div>
     </div>
   </section>
@@ -698,7 +698,7 @@ footer{padding:35px 20px calc(55px + env(safe-area-inset-bottom,0px));text-align
           </svg>
         </div>
         <div class="meta">Tuesday · 27 October 2026</div>
-        <div class="font-display text-2xl mt-2 c-bronze">5:30 PM onwards</div>
+        <div class="font-display text-2xl mt-2 c-bronze">6:30 PM onwards</div>
       </div>
 
       <div class="mt-8">
@@ -914,8 +914,8 @@ const observer=new IntersectionObserver((entries)=>{
 },{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 
-/* Countdown — 27 Oct 2026, 5:30 PM IST */
-const target=new Date('2026-10-27T17:30:00+05:30').getTime();
+/* Countdown — 27 Oct 2026, 6:30 PM IST */
+const target=new Date('2026-10-27T18:30:00+05:30').getTime();
 const cd={d:document.getElementById('days'),h:document.getElementById('hours'),m:document.getElementById('minutes'),s:document.getElementById('seconds')};
 let countdownTimer;
 function updateCountdown(){
